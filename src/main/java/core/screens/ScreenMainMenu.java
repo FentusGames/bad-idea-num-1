@@ -25,11 +25,12 @@ public class ScreenMainMenu extends Screen {
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		// DEMO
-		{
+		// DEBUG
+		if (core.getDebug()) {
 			ImGui.showDemoWindow();
-		}
 
+			renderScreenSelector();
+		}
 	}
 
 	@Override

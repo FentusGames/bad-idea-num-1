@@ -10,6 +10,8 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -22,6 +24,7 @@ import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
+import core.screens.ScreenTemplate;
 import imgui.ImFont;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
@@ -62,6 +65,11 @@ public class Core {
 	public ScrollCallback scrollCallback;
 	public MouseButtonCallback mouseButtonCallback;
 	public KeyCallback keyCallback;
+
+	private Map<String, String> language;
+
+	private boolean debug = false;
+	private List<Class<ScreenTemplate>> ignoredScreens;
 
 	public void init() {
 		initWindow();
@@ -167,54 +175,51 @@ public class Core {
 		colors[ImGuiCol.PopupBg]                = new float[] {0.07f, 0.07f, 0.07f, 1.00f};
 		colors[ImGuiCol.Border]                 = new float[] {0.40f, 0.40f, 0.40f, 1.00f};
 		colors[ImGuiCol.BorderShadow]           = new float[] {0.00f, 0.00f, 0.00f, 0.00f};
-		colors[ImGuiCol.FrameBg]                = new float[] {0.40f, 0.40f, 0.40f, 1.00f};
-		colors[ImGuiCol.FrameBgHovered]         = new float[] {0.57f, 0.57f, 0.57f, 1.00f};
-		colors[ImGuiCol.FrameBgActive]          = new float[] {0.76f, 0.76f, 0.76f, 0.80f};
-		colors[ImGuiCol.TitleBg]                = new float[] {0.08f, 0.08f, 0.08f, 1.00f};
-		colors[ImGuiCol.TitleBgActive]          = new float[] {0.08f, 0.08f, 0.08f, 1.00f};
-		colors[ImGuiCol.TitleBgCollapsed]       = new float[] {0.00f, 0.00f, 0.00f, 0.60f};
-		colors[ImGuiCol.MenuBarBg]              = new float[] {0.25f, 0.25f, 0.25f, 1.00f};
+		colors[ImGuiCol.FrameBg]                = new float[] {0.20f, 0.40f, 0.20f, 1.00f};
+		colors[ImGuiCol.FrameBgHovered]         = new float[] {0.30f, 0.60f, 0.30f, 1.00f};
+		colors[ImGuiCol.FrameBgActive]          = new float[] {0.40f, 0.80f, 0.40f, 0.80f};
+		colors[ImGuiCol.TitleBg]                = new float[] {0.08f, 0.15f, 0.08f, 1.00f};
+		colors[ImGuiCol.TitleBgActive]          = new float[] {0.10f, 0.20f, 0.10f, 1.00f};
+		colors[ImGuiCol.TitleBgCollapsed]       = new float[] {0.00f, 0.10f, 0.00f, 0.60f};
+		colors[ImGuiCol.MenuBarBg]              = new float[] {0.15f, 0.30f, 0.15f, 1.00f};
 		colors[ImGuiCol.ScrollbarBg]            = new float[] {0.08f, 0.08f, 0.08f, 1.00f};
-		colors[ImGuiCol.ScrollbarGrab]          = new float[] {0.25f, 0.25f, 0.25f, 1.00f};
-		colors[ImGuiCol.ScrollbarGrabHovered]   = new float[] {0.49f, 0.49f, 0.49f, 1.00f};
-		colors[ImGuiCol.ScrollbarGrabActive]    = new float[] {0.49f, 0.49f, 0.49f, 1.00f};
-		colors[ImGuiCol.CheckMark]              = new float[] {0.55f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.SliderGrab]             = new float[] {0.75f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.SliderGrabActive]       = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.Button]                 = new float[] {0.55f, 0.13f, 0.13f, 0.40f};
-		colors[ImGuiCol.ButtonHovered]          = new float[] {0.75f, 0.13f, 0.13f, 0.60f};
-		colors[ImGuiCol.ButtonActive]           = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.Header]                 = new float[] {0.55f, 0.13f, 0.13f, 0.40f};
-		colors[ImGuiCol.HeaderHovered]          = new float[] {0.75f, 0.13f, 0.13f, 0.60f};
-		colors[ImGuiCol.HeaderActive]           = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.Separator]              = new float[] {0.55f, 0.13f, 0.13f, 0.40f};
-		colors[ImGuiCol.SeparatorHovered]       = new float[] {0.75f, 0.13f, 0.13f, 0.60f};
-		colors[ImGuiCol.SeparatorActive]        = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.ResizeGrip]             = new float[] {0.55f, 0.13f, 0.13f, 0.40f};
-		colors[ImGuiCol.ResizeGripHovered]      = new float[] {0.75f, 0.13f, 0.13f, 0.60f};
-		colors[ImGuiCol.ResizeGripActive]       = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.Tab]                    = new float[] {0.55f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.TabHovered]             = new float[] {0.75f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.TabActive]              = new float[] {1.00f, 0.13f, 0.13f, 0.80f};
-		colors[ImGuiCol.TabUnfocused]           = new float[] {0.25f, 0.25f, 0.25f, 1.00f};
-		colors[ImGuiCol.TabUnfocusedActive]     = new float[] {0.40f, 0.40f, 0.40f, 1.00f};
-		colors[ImGuiCol.DockingPreview]         = new float[] {0.55f, 0.13f, 0.13f, 0.80f};
+		colors[ImGuiCol.ScrollbarGrab]          = new float[] {0.15f, 0.40f, 0.15f, 1.00f};
+		colors[ImGuiCol.ScrollbarGrabHovered]   = new float[] {0.25f, 0.50f, 0.25f, 1.00f};
+		colors[ImGuiCol.ScrollbarGrabActive]    = new float[] {0.30f, 0.60f, 0.30f, 1.00f};
+		colors[ImGuiCol.CheckMark]              = new float[] {0.20f, 0.80f, 0.20f, 0.80f};
+		colors[ImGuiCol.SliderGrab]             = new float[] {0.30f, 0.80f, 0.30f, 0.80f};
+		colors[ImGuiCol.SliderGrabActive]       = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.Button]                 = new float[] {0.20f, 0.60f, 0.20f, 0.40f};
+		colors[ImGuiCol.ButtonHovered]          = new float[] {0.30f, 0.80f, 0.30f, 0.60f};
+		colors[ImGuiCol.ButtonActive]           = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.Header]                 = new float[] {0.20f, 0.60f, 0.20f, 0.40f};
+		colors[ImGuiCol.HeaderHovered]          = new float[] {0.30f, 0.80f, 0.30f, 0.60f};
+		colors[ImGuiCol.HeaderActive]           = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.Separator]              = new float[] {0.20f, 0.60f, 0.20f, 0.40f};
+		colors[ImGuiCol.SeparatorHovered]       = new float[] {0.30f, 0.80f, 0.30f, 0.60f};
+		colors[ImGuiCol.SeparatorActive]        = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.ResizeGrip]             = new float[] {0.20f, 0.60f, 0.20f, 0.40f};
+		colors[ImGuiCol.ResizeGripHovered]      = new float[] {0.30f, 0.80f, 0.30f, 0.60f};
+		colors[ImGuiCol.ResizeGripActive]       = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.Tab]                    = new float[] {0.20f, 0.60f, 0.20f, 0.80f};
+		colors[ImGuiCol.TabHovered]             = new float[] {0.30f, 0.80f, 0.30f, 0.80f};
+		colors[ImGuiCol.TabActive]              = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
+		colors[ImGuiCol.TabUnfocused]           = new float[] {0.15f, 0.30f, 0.15f, 1.00f};
+		colors[ImGuiCol.TabUnfocusedActive]     = new float[] {0.20f, 0.40f, 0.20f, 1.00f};
+		colors[ImGuiCol.DockingPreview]         = new float[] {0.40f, 1.00f, 0.40f, 0.80f};
 		colors[ImGuiCol.DockingEmptyBg]         = new float[] {0.08f, 0.08f, 0.08f, 1.00f};
-		colors[ImGuiCol.PlotLines]              = new float[] {0.61f, 0.61f, 0.61f, 1.00f};
-		colors[ImGuiCol.PlotLinesHovered]       = new float[] {1.00f, 0.43f, 0.35f, 1.00f};
-		colors[ImGuiCol.PlotHistogram]          = new float[] {0.90f, 0.70f, 0.00f, 1.00f};
-		colors[ImGuiCol.PlotHistogramHovered]   = new float[] {1.00f, 0.60f, 0.00f, 1.00f};
-		colors[ImGuiCol.TableHeaderBg]          = new float[] {0.25f, 0.25f, 0.25f, 1.00f};
-		colors[ImGuiCol.TableBorderStrong]      = new float[] {0.25f, 0.25f, 0.25f, 1.00f};
-		colors[ImGuiCol.TableBorderLight]       = new float[] {0.23f, 0.23f, 0.25f, 1.00f};
+		colors[ImGuiCol.PlotLines]              = new float[] {0.50f, 1.00f, 0.50f, 1.00f};
+		colors[ImGuiCol.PlotLinesHovered]       = new float[] {0.60f, 1.00f, 0.60f, 1.00f};
+		colors[ImGuiCol.PlotHistogram]          = new float[] {0.70f, 1.00f, 0.30f, 1.00f};
+		colors[ImGuiCol.PlotHistogramHovered]   = new float[] {0.80f, 1.00f, 0.40f, 1.00f};
+		colors[ImGuiCol.TableHeaderBg]          = new float[] {0.15f, 0.30f, 0.15f, 1.00f};
+		colors[ImGuiCol.TableBorderStrong]      = new float[] {0.20f, 0.40f, 0.20f, 1.00f};
+		colors[ImGuiCol.TableBorderLight]       = new float[] {0.15f, 0.35f, 0.15f, 1.00f};
 		colors[ImGuiCol.TableRowBg]             = new float[] {0.00f, 0.00f, 0.00f, 0.00f};
-		colors[ImGuiCol.TableRowBgAlt]          = new float[] {1.00f, 1.00f, 1.00f, 1.00f};
-		colors[ImGuiCol.TextSelectedBg]         = new float[] {0.26f, 0.59f, 0.98f, 0.35f};
-		colors[ImGuiCol.DragDropTarget]         = new float[] {1.00f, 1.00f, 0.00f, 0.90f};
-		colors[ImGuiCol.NavHighlight]           = new float[] {0.26f, 0.59f, 0.98f, 1.00f};
-		colors[ImGuiCol.NavWindowingHighlight]  = new float[] {1.00f, 1.00f, 1.00f, 1.00f};
-		colors[ImGuiCol.NavWindowingDimBg]      = new float[] {0.80f, 0.80f, 0.80f, 1.00f};
-		colors[ImGuiCol.ModalWindowDimBg]       = new float[] {0.80f, 0.80f, 0.80f, 1.00f};
+		colors[ImGuiCol.TableRowBgAlt]          = new float[] {0.10f, 0.30f, 0.10f, 1.00f};
+		colors[ImGuiCol.TextSelectedBg]         = new float[] {0.26f, 0.80f, 0.26f, 0.35f};
+		colors[ImGuiCol.DragDropTarget]         = new float[] {0.80f, 1.00f, 0.40f, 0.90f};
+		colors[ImGuiCol.NavHighlight]           = new float[] {0.26f, 0.80f, 0.26f, 1.00f};
 		// @formatter:on
 
 		ImGui.getStyle().setColors(colors);
@@ -417,5 +422,35 @@ public class Core {
 
 	public void setKeyCallback(KeyCallback keyCallback) {
 		this.keyCallback = keyCallback;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public boolean getDebug() {
+		return debug;
+	}
+
+	public void setLanguage(Map<String, String> language) {
+		this.language = language;
+	}
+
+	public String getLanguage(String key) {
+		if (!language.containsKey(key)) {
+			System.err.println(String.format("Key \"%s\" missing.", key));
+			exit();
+
+			System.exit(-1); // Stops LWJGL from crashing.
+		}
+		return language.get(key);
+	}
+
+	public List<Class<ScreenTemplate>> getIgnoredScreens() {
+		return ignoredScreens;
+	}
+
+	public void setIgnoredScreens(List<Class<ScreenTemplate>> ignoredScreens) {
+		this.ignoredScreens = ignoredScreens;
 	}
 }
