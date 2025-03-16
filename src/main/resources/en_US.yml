@@ -1,3 +1,7 @@
+# Main Menu
 core.screens.ScreenMainMenu: Main Menu
+core.screens.ScreenSettings: Settings
 core.screens.ScreenGame: Play
+
+# Not Used
 core.screens.ScreenTemplate: Template

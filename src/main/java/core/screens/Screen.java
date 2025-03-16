@@ -67,15 +67,28 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 	}
 
 	public void renderScreenSelector(int windowX, int windowY, int windowWidth, int windowHeight) {
-		// Filter screen classes based on ignored screens and current screen
-		List<Class<? extends Screen>> filteredScreens = screenClasses.stream().filter(screenClass -> !core.getIgnoredScreens().contains(screenClass) && !screenClass.equals(this.getClass())).toList();
+		// Filter screen classes based on getOrder() != -1 and excluding current screen
+		List<Class<? extends Screen>> filteredScreens = screenClasses.stream().filter(screenClass -> {
+			try {
+				Screen screenInstance = screenClass.getDeclaredConstructor(Core.class).newInstance(core);
+				return screenInstance.getOrder() != -1 && !screenClass.equals(this.getClass());
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Failed to create screen instance for: " + screenClass.getName());
+				return false; // Exclude if instantiation fails
+			}
+		}).toList();
 
 		int screenCount = filteredScreens.size(); // Store filtered size
 
 		// Button dimensions
 		float buttonHeight = 30; // Consistent button height
 		float menuWidth = 250;
-		float menuHeight = 50 + (buttonHeight * screenCount);
+
+		// Calculate dynamic window height based on content (no extra padding)
+		float menuHeight = ImGui.getStyle().getWindowPaddingY() * 2 // Top and bottom padding
+				+ (buttonHeight * screenCount) // Buttons
+				+ ImGui.getStyle().getItemSpacingY() * (screenCount - 1); // Space between buttons
 
 		// Centering calculation using provided window dimensions
 		float posX = windowX + (windowWidth - menuWidth) * 0.5f;
@@ -86,24 +99,44 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 		ImGui.setNextWindowSize(menuWidth, menuHeight);
 
 		// Set window flags to remove background, title bar, and prevent resizing/moving
-		int windowFlags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoMove;
+		int windowFlags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize;
 
 		ImGui.begin(core.getLanguage("core.screens.ScreenMainMenu"), windowFlags);
-
-		ImGui.separator();
 
 		// Manually set button width to fit inside the window
 		float buttonWidth = menuWidth - ImGui.getStyle().getWindowPaddingX() * 2;
 
 		// List filtered screens
-		for (Class<? extends Screen> screenClass : filteredScreens) {
-			if (ImGui.button(core.getLanguage(screenClass.getName()), buttonWidth, buttonHeight)) {
-				switchScreen(screenClass);
+		filteredScreens.stream().sorted((c1, c2) -> {
+			try {
+				Screen s1 = c1.getDeclaredConstructor(Core.class).newInstance(core);
+				Screen s2 = c2.getDeclaredConstructor(Core.class).newInstance(core);
+				return Integer.compare(s1.getOrder(), s2.getOrder());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0; // Default to no order change in case of failure
 			}
-		}
+		}).forEach(screenClass -> {
+			try {
+				// Create a temporary instance of the screen to retrieve getMenuName()
+				Screen screenInstance = screenClass.getDeclaredConstructor(Core.class).newInstance(core);
+				String menuName = screenInstance.getMenuName(); // Get menu name from the instance
+
+				if (ImGui.button(menuName, buttonWidth, buttonHeight)) {
+					switchScreen(screenClass);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Failed to create screen instance for: " + screenClass.getName());
+			}
+		});
 
 		ImGui.end();
 	}
+
+	protected abstract String getMenuName();
+
+	protected abstract int getOrder();
 
 	private void switchScreen(Class<? extends Screen> screenClass) {
 		try {

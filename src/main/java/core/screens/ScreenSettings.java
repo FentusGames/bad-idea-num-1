@@ -2,8 +2,8 @@ package core.screens;
 
 import core.Core;
 
-public class ScreenGame extends Screen {
-	public ScreenGame(Core core) {
+public class ScreenSettings extends Screen {
+	public ScreenSettings(Core core) {
 		super(core);
 	}
 
@@ -48,10 +48,10 @@ public class ScreenGame extends Screen {
 	}
 	
 	public String getMenuName() {
-		return "Play";
+		return "Settings";
 	}
 	
 	public int getOrder() {
-		return 0;
+		return 1;
 	}
 }

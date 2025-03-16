@@ -10,7 +10,6 @@ import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.lwjgl.glfw.Callbacks;
@@ -24,7 +23,6 @@ import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
-import core.screens.ScreenTemplate;
 import imgui.ImFont;
 import imgui.ImFontAtlas;
 import imgui.ImFontConfig;
@@ -69,7 +67,6 @@ public class Core {
 	private Map<String, String> language;
 
 	private boolean debug = false;
-	private List<Class<ScreenTemplate>> ignoredScreens;
 
 	public void init() {
 		initWindow();
@@ -444,13 +441,5 @@ public class Core {
 			System.exit(-1); // Stops LWJGL from crashing.
 		}
 		return language.get(key);
-	}
-
-	public List<Class<ScreenTemplate>> getIgnoredScreens() {
-		return ignoredScreens;
-	}
-
-	public void setIgnoredScreens(List<Class<ScreenTemplate>> ignoredScreens) {
-		this.ignoredScreens = ignoredScreens;
 	}
 }

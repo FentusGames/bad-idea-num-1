@@ -52,4 +52,13 @@ public class ScreenMainMenu extends Screen {
 	public void key(long window, int key, int scancode, int action, int mods) {
 
 	}
+
+	@Override
+	protected String getMenuName() {
+		return null;
+	}
+	
+	public int getOrder() {
+		return -1;
+	}
 }

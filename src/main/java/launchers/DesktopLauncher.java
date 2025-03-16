@@ -1,14 +1,12 @@
 package launchers;
 
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Map;
 
 import org.yaml.snakeyaml.Yaml;
 
 import core.Core;
 import core.screens.ScreenMainMenu;
-import core.screens.ScreenTemplate;
 
 public class DesktopLauncher {
 	public static void main(String[] args) {
@@ -42,7 +40,6 @@ public class DesktopLauncher {
 
 		// Debug
 		core.setDebug(true);
-		core.setIgnoredScreens(Arrays.asList(ScreenTemplate.class)); // Main Menu Ignored Screens
 
 		// The initial screen. (Only needs to call start one time.)
 		core.setScreen(new ScreenMainMenu(core)).start();
