@@ -30,7 +30,7 @@ public class ScreenMainMenu extends Screen {
 			ImGui.showDemoWindow();
 		}
 
-		renderScreenSelector();
+		renderScreenSelector(windowX, windowY, windowWidth, windowHeight);
 	}
 
 	@Override
