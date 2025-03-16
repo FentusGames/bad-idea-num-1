@@ -18,6 +18,13 @@
 	</properties>
 
 	<dependencies>
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20240303</version> <!-- Use the latest version -->
+		</dependency>
+
 		<!-- Reflections -->
 		<dependency>
 			<groupId>org.reflections</groupId>
