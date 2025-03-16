@@ -48,7 +48,7 @@ public class ScreenGame extends Screen {
 	}
 	
 	public String getMenuName() {
-		return "Play";
+		return core.getLanguage("play");
 	}
 	
 	public int getOrder() {

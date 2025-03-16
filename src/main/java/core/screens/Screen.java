@@ -105,7 +105,7 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 		// Set window flags to remove background, title bar, and prevent resizing/moving
 		int windowFlags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize;
 
-		ImGui.begin(core.getLanguage("core.screens.ScreenMainMenu"), windowFlags);
+		ImGui.begin(core.getLanguage("main-menu"), windowFlags);
 
 		// Manually set button width to fit inside the window
 		float buttonWidth = menuWidth - ImGui.getStyle().getWindowPaddingX() * 2;
@@ -139,7 +139,7 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 		ImGui.separator();
 
 		// Exit Button
-		if (ImGui.button("Exit", buttonWidth, buttonHeight)) {
+		if (ImGui.button(core.getLanguage("exit"), buttonWidth, buttonHeight)) {
 			core.exit();
 		}
 

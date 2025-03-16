@@ -434,12 +434,20 @@ public class Core {
 	}
 
 	public String getLanguage(String key) {
+		if (language == null) {
+			System.err.println("language can't be null.");
+			exit();
+
+			System.exit(-1); // Stops LWJGL from crashing.
+		}
+
 		if (!language.containsKey(key)) {
 			System.err.println(String.format("Key \"%s\" missing.", key));
 			exit();
 
 			System.exit(-1); // Stops LWJGL from crashing.
 		}
+		
 		return language.get(key);
 	}
 }

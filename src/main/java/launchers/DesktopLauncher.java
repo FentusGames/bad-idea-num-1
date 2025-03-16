@@ -3,13 +3,19 @@ package launchers;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import core.Core;
 import core.screens.ScreenMainMenu;
 
 public class DesktopLauncher {
+	// Logger
+	private static final Logger logger = LoggerFactory.getLogger(DesktopLauncher.class);
+
 	public static void main(String[] args) {
+
 		// Load language file
 		Yaml yaml = new Yaml();
 
@@ -19,6 +25,9 @@ public class DesktopLauncher {
 			if (inputStream == null) {
 				throw new RuntimeException("File en_US.yml not found in resources.");
 			}
+
+			logger.info("Added en_US.yml language file.");
+
 			data = yaml.load(inputStream);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -33,7 +42,7 @@ public class DesktopLauncher {
 		// Client Settings
 		core.setWidth(1366);
 		core.setHeight(768);
-		core.setTitle("Livin Covida Loca");
+		core.setTitle("Bad Idea #1");
 		core.setFontMinSize(12);
 		core.setFontMaxSize(72);
 		core.setFontStepAmt(2);
