@@ -1,2 +1,3 @@
 core.screens.ScreenMainMenu: Main Menu
+core.screens.ScreenGame: Play
 core.screens.ScreenTemplate: Template

@@ -72,7 +72,7 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 
 		// List all available screens
 		for (Class<? extends Screen> screenClass : screenClasses) {
-			if (!core.getIgnoredScreens().contains(screenClass)) {
+			if (!core.getIgnoredScreens().contains(screenClass) && !screenClass.equals(this.getClass())) {
 				if (ImGui.button(core.getLanguage(screenClass.getName()))) {
 					switchScreen(screenClass);
 				}

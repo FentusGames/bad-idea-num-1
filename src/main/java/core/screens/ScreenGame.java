@@ -1,10 +1,9 @@
 package core.screens;
 
 import core.Core;
-import imgui.ImGui;
 
-public class ScreenMainMenu extends Screen {
-	public ScreenMainMenu(Core core) {
+public class ScreenGame extends Screen {
+	public ScreenGame(Core core) {
 		super(core);
 	}
 
@@ -25,12 +24,7 @@ public class ScreenMainMenu extends Screen {
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		// DEBUG
-		if (core.getDebug()) {
-			ImGui.showDemoWindow();
-		}
 
-		renderScreenSelector();
 	}
 
 	@Override
