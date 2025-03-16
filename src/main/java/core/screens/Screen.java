@@ -84,11 +84,15 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 		// Button dimensions
 		float buttonHeight = 30; // Consistent button height
 		float menuWidth = 250;
+		float separatorHeight = ImGui.getStyle().getItemSpacingY();
 
-		// Calculate dynamic window height based on content (no extra padding)
+		// Calculate dynamic window height based on content (+ exit button & separator)
 		float menuHeight = ImGui.getStyle().getWindowPaddingY() * 2 // Top and bottom padding
-				+ (buttonHeight * screenCount) // Buttons
-				+ ImGui.getStyle().getItemSpacingY() * (screenCount - 1); // Space between buttons
+				+ (buttonHeight * screenCount) // Buttons for available screens
+				+ (screenCount > 0 ? ImGui.getStyle().getItemSpacingY() * (screenCount - 1) : 0) // Space between screen buttons
+				+ separatorHeight // Height of the separator before Exit button
+				+ buttonHeight // Additional space for Exit button
+				+ ImGui.getStyle().getItemSpacingY(); // Space above the Exit button
 
 		// Centering calculation using provided window dimensions
 		float posX = windowX + (windowWidth - menuWidth) * 0.5f;
@@ -130,6 +134,14 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 				System.err.println("Failed to create screen instance for: " + screenClass.getName());
 			}
 		});
+
+		// Separator before the exit button
+		ImGui.separator();
+
+		// Exit Button
+		if (ImGui.button("Exit", buttonWidth, buttonHeight)) {
+			core.exit();
+		}
 
 		ImGui.end();
 	}
