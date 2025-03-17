@@ -31,7 +31,7 @@ public class GeneProcessor {
 	private static final String MODEL_NAME = "gemma3:1b";
 	private static final String INPUT_FILE_PATH = "gene_info";
 
-	private static final String DB_URL = "jdbc:sqlite:genes.db";
+	private static final String DB_URL = "jdbc:sqlite:game.db";
 	private static final int THREAD_COUNT = 4;
 
 	public static void main(String[] args) {
