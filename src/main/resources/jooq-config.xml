@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration
+    xmlns="http://www.jooq.org/xsd/jooq-codegen-3.14.0.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.jooq.org/xsd/jooq-codegen-3.14.0.xsd https://www.jooq.org/xsd/jooq-codegen-3.14.0.xsd">
+
+    <jdbc>
+        <driver>org.sqlite.JDBC</driver>
+        <url>jdbc:sqlite:game.db</url>
+        <user></user> <!-- SQLite does not require a username -->
+        <password></password>
+    </jdbc>
+
+    <generator>
+        <name>org.jooq.codegen.JavaGenerator</name>
+        <database>
+            <name>org.jooq.meta.sqlite.SQLiteDatabase</name>
+            <includes>.*</includes>
+            <excludes></excludes>
+        </database>
+
+        <generate>
+            <relations>true</relations>
+            <deprecated>false</deprecated>
+            <records>true</records>
+            <interfaces>false</interfaces>
+            <daos>false</daos>
+        </generate>
+
+        <target>
+            <packageName>jooq.generated</packageName>
+            <directory>src/main/java</directory>
+        </target>
+    </generator>
+</configuration>
