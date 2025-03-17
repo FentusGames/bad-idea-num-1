@@ -1,11 +1,8 @@
 package launchers;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,21 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class GeneProcessor {
-	// CMD
-
-	/* @formatter:off
-
-	set OLLAMA_FLASH_ATTENTION=true
-	set OLLAMA_GPU_OVERHEAD=0
-	set OLLAMA_NUM_PARALLEL=8
-	set OLLAMA_KV_CACHE_TYPE=auto
-	set OLLAMA_LLM_LIBRARY=cuda
-	set OLLAMA_MAX_LOADED_MODELS=1
-	
-	@formatter:on */
-
-	// ollama serve
-
 	private static final Pattern ENCODED_SYMBOL_PATTERN = Pattern.compile("^[ATCG]{20}$");
 	private static final Pattern GENE_ID_PATTERN = Pattern.compile("^\\d{10}$");
 	private static final Set<String> REQUIRED_KEYS = Set.of("description", "diseases", "encodedSymbol", "gene_id");
@@ -43,26 +25,12 @@ public class GeneProcessor {
 	private static final String MODEL_NAME = "gemma3:1b";
 	private static final HttpClient httpClient = HttpClient.newHttpClient();
 	private static final String INPUT_FILE_PATH = "gene_info"; // Input file
-	private static final String OUTPUT_FILE_PATH = "genes_output.json"; // Output JSON file
 
 	public static void main(String[] args) {
-		// Clear the JSON file at start
-		try (BufferedWriter clearWriter = new BufferedWriter(new FileWriter(OUTPUT_FILE_PATH, StandardCharsets.UTF_8))) {
-			clearWriter.write("[]"); // Initialize as an empty JSON array
-		} catch (IOException e) {
-			e.printStackTrace();
-			return;
-		}
-
-		try (BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH, StandardCharsets.UTF_8)); RandomAccessFile file = new RandomAccessFile(OUTPUT_FILE_PATH, "rw")) {
+		try (BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH, StandardCharsets.UTF_8))) {
 			String line;
 			boolean firstLine = true;
 			int lineNumber = 0;
-
-			// Move to the position to start appending inside JSON array
-			file.seek(file.length() - 1);
-			if (file.length() > 2)
-				file.writeBytes(",");
 
 			while ((line = reader.readLine()) != null) {
 				if (firstLine) {
@@ -85,7 +53,6 @@ public class GeneProcessor {
 				System.out.println("Processing line " + lineNumber + ": GeneID " + geneId + " (" + symbol + ")");
 
 				// Generate gene-specific metadata
-				String geneIdPadded = String.format("%010d", Integer.parseInt(geneId));
 				String encodedSymbol = generateATCGCode(symbol);
 
 				// Query Ollama API
@@ -93,16 +60,14 @@ public class GeneProcessor {
 				String ollamaResponse = queryOllama(prompt);
 
 				if (!ollamaResponse.isEmpty()) {
-					JSONObject jsonObject = processJsonResponse(ollamaResponse, geneIdPadded, encodedSymbol);
+					JSONObject jsonObject = processJsonResponse(ollamaResponse, lineNumber, encodedSymbol);
 
 					System.out.println(jsonObject);
 
 					try {
 						if (validateGeneEntry(jsonObject)) {
 							if (jsonObject != null) {
-								// Write each record to JSON file immediately
-								file.writeBytes("\n\t" + jsonObject.toString() + ",\n");
-								file.seek(file.length() - 1); // Adjust file pointer for the next write
+								System.out.println(jsonObject.toString());
 							}
 						}
 					} catch (Exception e) {
@@ -110,17 +75,12 @@ public class GeneProcessor {
 					}
 				}
 			}
-
-			// Close JSON array properly
-			file.writeBytes("]");
-
-			System.out.println("JSON processing complete. Data saved to: " + OUTPUT_FILE_PATH);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static JSONObject processJsonResponse(String ollamaResponse, String geneIdPadded, String encodedSymbol) {
+	private static JSONObject processJsonResponse(String ollamaResponse, int geneIdPadded, String encodedSymbol) {
 		String extractedJson = extractJson(ollamaResponse);
 		if (extractedJson != null) {
 			try {
@@ -269,11 +229,6 @@ public class GeneProcessor {
 		// Validate 'gene_id'
 		if (!geneObject.has("gene_id") || !(geneObject.get("gene_id") instanceof String)) {
 			System.err.println("Validation failed: 'gene_id' must be a string.");
-			return false;
-		}
-		String geneId = geneObject.getString("gene_id");
-		if (!GENE_ID_PATTERN.matcher(geneId).matches()) {
-			System.err.println("Validation failed: 'gene_id' must be a 10-digit string.");
 			return false;
 		}
 

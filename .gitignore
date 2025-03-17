@@ -2,3 +2,5 @@
 /target/
 .classpath
 .project
+/genes.db
+/gene_info
