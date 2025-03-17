@@ -12,6 +12,7 @@ import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jooq.DSLContext;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -64,6 +65,7 @@ public class Core {
 	public MouseButtonCallback mouseButtonCallback;
 	public KeyCallback keyCallback;
 
+	private DSLContext db;
 	private Map<String, String> language;
 
 	private boolean debug = false;
@@ -449,5 +451,13 @@ public class Core {
 		}
 		
 		return language.get(key);
+	}
+
+	public void setDB(DSLContext db) {
+		this.db = db;
+	}
+	
+	public DSLContext getDB() {
+		return db;
 	}
 }

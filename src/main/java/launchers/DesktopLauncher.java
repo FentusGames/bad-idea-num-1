@@ -1,8 +1,13 @@
 package launchers;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Map;
 
+import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -15,6 +20,15 @@ public class DesktopLauncher {
 	private static final Logger logger = LoggerFactory.getLogger(DesktopLauncher.class);
 
 	public static void main(String[] args) {
+		// Load Database
+		DSLContext db = null;
+
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:game.db"); // Change to actual DB path
+			db = DSL.using(connection);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		// Load language file
 		Yaml yaml = new Yaml();
@@ -35,6 +49,9 @@ public class DesktopLauncher {
 
 		// Core client passed form screen to screen.
 		Core core = new Core();
+
+		// Load language
+		core.setDB(db);
 
 		// Load language
 		core.setLanguage(data);
