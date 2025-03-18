@@ -14,334 +14,334 @@ import imgui.ImColor;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiTableColumnFlags;
-import imgui.flag.ImGuiTableFlags;
 
 public class ScreenGame extends Screen {
 
-    private String originalGene;
-    private StringBuilder currentGene;
-    private String targetGene;
-    private int movesLeft;
-    private int score;
+	private String originalGene;
+	private StringBuilder currentGene;
+	private String targetGene;
+	private int movesLeft;
+	private int score;
 
-    // Our list of upcoming random nucleotides
-    private List<Character> nextGenes;
+	// Our list of upcoming random nucleotides
+	private List<Character> nextGenes;
 
-    private String geneDescription;
-    private String geneDiseases;
-    private boolean showFailurePopup = false;
+	private String geneDescription;
+	private String geneDiseases;
+	private boolean showFailurePopup = false;
 
-    public ScreenGame(Core core) {
-        super(core);
-    }
+	public ScreenGame(Core core) {
+		super(core);
+	}
 
-    @Override
-    public void init() {
-        super.init();
-        initGame();
-    }
+	@Override
+	public void init() {
+		super.init();
+		initGame();
+	}
 
-    private void initGame() {
-        DSLContext db = core.getDB();
+	private void initGame() {
+		DSLContext db = core.getDB();
 
-        var geneRecord = db.selectFrom(GENES).orderBy(DSL.rand()).limit(1).fetchOne();
-        if (geneRecord != null) {
-            originalGene = geneRecord.getEncodedsymbol();
-            geneDescription = geneRecord.getDescription();
-            geneDiseases = geneRecord.getDiseases();
-        } else {
-            originalGene = "ACACAACTGGCGGACGGCCA";
-            geneDescription = "Unknown gene description.";
-            geneDiseases = "";
-        }
+		var geneRecord = db.selectFrom(GENES).orderBy(DSL.rand()).limit(1).fetchOne();
+		if (geneRecord != null) {
+			originalGene = geneRecord.getEncodedsymbol();
+			geneDescription = geneRecord.getDescription();
+			geneDiseases = geneRecord.getDiseases();
+		} else {
+			originalGene = "ACACAACTGGCGGACGGCCA";
+			geneDescription = "Unknown gene description.";
+			geneDiseases = "";
+		}
 
-        currentGene = new StringBuilder(scrambleGene(originalGene));
-        targetGene = originalGene;
-        movesLeft = 15;
-        score = 0;
-        nextGenes = generateNextGenes();
-        showFailurePopup = false;
-    }
+		currentGene = new StringBuilder(scrambleGene(originalGene));
+		targetGene = originalGene;
+		movesLeft = 15;
+		score = 0;
+		nextGenes = generateNextGenes();
+		showFailurePopup = false;
+	}
 
-    private String scrambleGene(String gene) {
-        if (gene == null || gene.isEmpty()) {
-            return "";
-        }
-        char[] chars = gene.toCharArray();
-        Random rand = new Random();
-        for (int i = 0; i < chars.length; i++) {
-            int swapIdx = rand.nextInt(chars.length);
-            char temp = chars[i];
-            chars[i] = chars[swapIdx];
-            chars[swapIdx] = temp;
-        }
-        return new String(chars);
-    }
+	private String scrambleGene(String gene) {
+		if (gene == null || gene.isEmpty()) {
+			return "";
+		}
+		char[] chars = gene.toCharArray();
+		Random rand = new Random();
+		for (int i = 0; i < chars.length; i++) {
+			int swapIdx = rand.nextInt(chars.length);
+			char temp = chars[i];
+			chars[i] = chars[swapIdx];
+			chars[swapIdx] = temp;
+		}
+		return new String(chars);
+	}
 
-    private List<Character> generateNextGenes() {
-        List<Character> list = new LinkedList<>();
-        Random rand = new Random();
-        char[] bases = { 'A', 'T', 'C', 'G' };
-        for (int i = 0; i < 5; i++) {
-            list.add(bases[rand.nextInt(bases.length)]);
-        }
-        return list;
-    }
+	private List<Character> generateNextGenes() {
+		List<Character> list = new LinkedList<>();
+		Random rand = new Random();
+		char[] bases = { 'A', 'T', 'C', 'G' };
+		for (int i = 0; i < 5; i++) {
+			list.add(bases[rand.nextInt(bases.length)]);
+		}
+		return list;
+	}
 
-    @Override
-    public void update(float delta) {
-        if (movesLeft <= 0 && !currentGene.toString().equals(targetGene)) {
-            showFailurePopup = true;
-        }
-    }
+	@Override
+	public void update(float delta) {
+		if (movesLeft <= 0 && !currentGene.toString().equals(targetGene)) {
+			showFailurePopup = true;
+		}
+	}
 
-    @Override
-    public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-        if (showFailurePopup) {
-            ImGui.openPopup("Gene Failure");
-        }
+	@Override
+	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+		if (showFailurePopup) {
+			ImGui.openPopup("Gene Failure");
+		}
 
-        ImGui.begin("Gene Editor");
+		ImGui.begin("Gene Editor");
 
-        ImGui.text("Fix the DNA sequence to match the target!");
-        ImGui.text("Moves Left: " + movesLeft);
-        ImGui.text("Score: " + score);
+		ImGui.text("Fix the DNA sequence to match the target!");
+		ImGui.text("Moves Left: " + movesLeft);
+		ImGui.text("Score: " + score);
 
-        float matchPercentage = computeMatchPercentage();
-        ImGui.text(String.format("Match: %.2f%%", matchPercentage));
+		float matchPercentage = computeMatchPercentage();
+		ImGui.text(String.format("Match: %.2f%%", matchPercentage));
 
-        // Draw target gene
-        ImGui.text("Target Gene:");
-        drawTargetGeneTable();
+		// Draw target gene
+		ImGui.text("Target Gene:");
+		drawTargetGeneTable();
 
-        // Draw current gene
-        ImGui.text("Current Gene:");
-        drawCurrentGeneTable();
+		// Draw current gene
+		ImGui.text("Current Gene:");
+		drawCurrentGeneTable();
 
-        // Next Genes
-        ImGui.text("Insertable Genes:");
-        for (int i = 0; i < nextGenes.size(); i++) {
-            ImGui.sameLine();
-            drawNextGeneDragSource(nextGenes.get(i), i);
-        }
+		// Next Genes
+		ImGui.text("Insertable Genes:");
+		for (int i = 0; i < nextGenes.size(); i++) {
+			ImGui.sameLine();
+			drawNextGeneDragSource(nextGenes.get(i), i);
+		}
 
-        // Win check
-        if (currentGene.toString().equals(targetGene)) {
-            ImGui.text("Success! You fixed the gene.");
-            score += 100;
-            if (ImGui.button("Play Again")) {
-                initGame();
-            }
-        }
+		// Win check
+		if (currentGene.toString().equals(targetGene)) {
+			ImGui.text("Success! You fixed the gene.");
+			score += 100;
+			if (ImGui.button("Play Again")) {
+				initGame();
+			}
+		}
 
-        ImGui.end();
+		ImGui.end();
 
-        // Failure popup
-        if (ImGui.beginPopupModal("Gene Failure")) {
-            ImGui.text("You failed to match the gene!");
-            ImGui.separator();
-            ImGui.text("Description: " + (geneDescription != null ? geneDescription : "N/A"));
-            if (geneDiseases != null && !geneDiseases.isEmpty()) {
-                ImGui.text("Diseases: " + geneDiseases);
-            } else {
-                ImGui.text("Diseases: None");
-            }
-            ImGui.separator();
+		// Failure popup
+		if (ImGui.beginPopupModal("Gene Failure")) {
+			ImGui.text("You failed to match the gene!");
+			ImGui.separator();
+			ImGui.text("Description: " + (geneDescription != null ? geneDescription : "N/A"));
+			if (geneDiseases != null && !geneDiseases.isEmpty()) {
+				ImGui.text("Diseases: " + geneDiseases);
+			} else {
+				ImGui.text("Diseases: None");
+			}
+			ImGui.separator();
 
-            if (ImGui.button("OK")) {
-                ImGui.closeCurrentPopup();
-                initGame();
-            }
-            ImGui.endPopup();
-        }
-    }
+			if (ImGui.button("OK")) {
+				ImGui.closeCurrentPopup();
+				initGame();
+			}
+			ImGui.endPopup();
+		}
+	}
 
-    // Table for the target gene (only 1 row, multiple columns).
-    private void drawTargetGeneTable() {
-        if (targetGene == null || targetGene.isEmpty()) {
-            ImGui.text("[Empty]");
-            return;
-        }
-        int length = targetGene.length();
-        if (length == 0) {
-            ImGui.text("[Empty]");
-            return;
-        }
+	// Table for the target gene (only 1 row, multiple columns).
+	private void drawTargetGeneTable() {
+		if (targetGene == null || targetGene.isEmpty()) {
+			ImGui.text("[Empty]");
+			return;
+		}
+		int length = targetGene.length();
+		if (length == 0) {
+			ImGui.text("[Empty]");
+			return;
+		}
 
-        // Start the table
-        if (ImGui.beginTable("TargetGeneTable", length)) {
-            // 1) Setup columns BEFORE drawing any rows
-            for (int col = 0; col < length; col++) {
-                ImGui.tableSetupColumn("TargetCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
-            }
+		// Start the table
+		if (ImGui.beginTable("TargetGeneTable", length)) {
+			// 1) Setup columns BEFORE drawing any rows
+			for (int col = 0; col < length; col++) {
+				ImGui.tableSetupColumn("TargetCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
+			}
 
-            // 2) Lock the layout by starting row(s)
-            ImGui.tableNextRow();
+			// 2) Lock the layout by starting row(s)
+			ImGui.tableNextRow();
 
-            // 3) Fill each column
-            for (int i = 0; i < length; i++) {
-                ImGui.tableSetColumnIndex(i);
-                String text = String.valueOf(targetGene.charAt(i));
-                ImGui.text(text);
-            }
-            ImGui.endTable();
-        }
-    }
+			// 3) Fill each column
+			for (int i = 0; i < length; i++) {
+				ImGui.tableSetColumnIndex(i);
+				String text = String.valueOf(targetGene.charAt(i));
+				ImGui.text(text);
+			}
+			ImGui.endTable();
+		}
+	}
 
-    // Table for the current gene: single row, multiple columns
-    private void drawCurrentGeneTable() {
-        if (currentGene == null || currentGene.length() == 0) {
-            ImGui.text("[Empty]");
-            return;
-        }
-        int length = currentGene.length();
-        if (length == 0) {
-            ImGui.text("[Empty]");
-            return;
-        }
+	// Table for the current gene: single row, multiple columns
+	private void drawCurrentGeneTable() {
+		if (currentGene == null || currentGene.length() == 0) {
+			ImGui.text("[Empty]");
+			return;
+		}
+		int length = currentGene.length();
+		if (length == 0) {
+			ImGui.text("[Empty]");
+			return;
+		}
 
-        if (ImGui.beginTable("CurrentGeneTable", length)) {
-            // 1) Setup columns
-            for (int col = 0; col < length; col++) {
-                ImGui.tableSetupColumn("CurrentCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
-            }
+		if (ImGui.beginTable("CurrentGeneTable", length)) {
+			// 1) Setup columns
+			for (int col = 0; col < length; col++) {
+				ImGui.tableSetupColumn("CurrentCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
+			}
 
-            // 2) Begin row
-            ImGui.tableNextRow();
+			// 2) Begin row
+			ImGui.tableNextRow();
 
-            // 3) fill columns
-            for (int i = 0; i < length; i++) {
-                ImGui.tableSetColumnIndex(i);
-                boolean isCorrect = (i < targetGene.length() && currentGene.charAt(i) == targetGene.charAt(i));
+			// 3) fill columns
+			for (int i = 0; i < length; i++) {
+				ImGui.tableSetColumnIndex(i);
+				boolean isCorrect = (i < targetGene.length() && currentGene.charAt(i) == targetGene.charAt(i));
 
-                if (isCorrect) {
-                    ImGui.pushStyleColor(ImGuiCol.Button, ImColor.rgba(0.0f, 0.5f, 0.0f, 1.0f));
-                    ImGui.pushStyleColor(ImGuiCol.ButtonHovered, ImColor.rgba(0.0f, 0.7f, 0.0f, 1.0f));
-                } else {
-                    ImGui.pushStyleColor(ImGuiCol.Button, ImColor.rgba(0.5f, 0.0f, 0.0f, 1.0f));
-                    ImGui.pushStyleColor(ImGuiCol.ButtonHovered, ImColor.rgba(0.7f, 0.0f, 0.0f, 1.0f));
-                }
+				if (isCorrect) {
+					ImGui.pushStyleColor(ImGuiCol.Button, ImColor.rgba(0.0f, 0.5f, 0.0f, 1.0f));
+					ImGui.pushStyleColor(ImGuiCol.ButtonHovered, ImColor.rgba(0.0f, 0.7f, 0.0f, 1.0f));
+				} else {
+					ImGui.pushStyleColor(ImGuiCol.Button, ImColor.rgba(0.5f, 0.0f, 0.0f, 1.0f));
+					ImGui.pushStyleColor(ImGuiCol.ButtonHovered, ImColor.rgba(0.7f, 0.0f, 0.0f, 1.0f));
+				}
 
-                String label = currentGene.charAt(i) + "##" + i;
-                float buttonWidth = 45f;
-                float buttonHeight = 25f;
-                ImGui.button(label, buttonWidth, buttonHeight);
-                ImGui.popStyleColor(2);
+				String label = currentGene.charAt(i) + "##" + i;
+				float buttonWidth = 45f;
+				float buttonHeight = 25f;
+				ImGui.button(label, buttonWidth, buttonHeight);
+				ImGui.popStyleColor(2);
 
-                // DRAG SOURCE
-                if (ImGui.beginDragDropSource()) {
-                    ImGui.setDragDropPayload("CELL_INDEX", i, ImGuiCond.Once);
-                    ImGui.text("Dragging cell " + i);
-                    ImGui.endDragDropSource();
-                }
+				// DRAG SOURCE
+				if (ImGui.beginDragDropSource()) {
+					ImGui.setDragDropPayload("CELL_INDEX", i, ImGuiCond.Once);
+					ImGui.text("Dragging cell " + i);
+					ImGui.endDragDropSource();
+				}
 
-                // DRAG TARGET
-                if (ImGui.beginDragDropTarget()) {
-                    Object cellPayload = ImGui.acceptDragDropPayload("CELL_INDEX");
-                    if (cellPayload != null) {
-                        int fromIndex = (Integer) cellPayload;
-                        if (Math.abs(fromIndex - i) == 1) {
-                            swap(fromIndex, i);
-                        }
-                    }
+				// DRAG TARGET
+				if (ImGui.beginDragDropTarget()) {
+					Object cellPayload = ImGui.acceptDragDropPayload("CELL_INDEX");
+					if (cellPayload != null) {
+						int fromIndex = (Integer) cellPayload;
+						if (Math.abs(fromIndex - i) == 1) {
+							swap(fromIndex, i);
+						}
+					}
 
-                    Object nextPayload = ImGui.acceptDragDropPayload("NEXT_CHAR");
-                    if (nextPayload != null) {
-                        int nextIndex = (Integer) nextPayload;
-                        if (nextIndex >= 0 && nextIndex < nextGenes.size()) {
-                            char c = nextGenes.get(nextIndex);
-                            replaceGene(i, c);
+					Object nextPayload = ImGui.acceptDragDropPayload("NEXT_CHAR");
+					if (nextPayload != null) {
+						int nextIndex = (Integer) nextPayload;
+						if (nextIndex >= 0 && nextIndex < nextGenes.size()) {
+							char c = nextGenes.get(nextIndex);
+							replaceGene(i, c);
 
-                            nextGenes.remove(nextIndex);
-                            Random rand = new Random();
-                            char[] bases = { 'A', 'T', 'C', 'G' };
-                            nextGenes.add(bases[rand.nextInt(bases.length)]);
-                        }
-                    }
-                    ImGui.endDragDropTarget();
-                }
-            }
-            ImGui.endTable();
-        }
-    }
+							nextGenes.remove(nextIndex);
+							Random rand = new Random();
+							char[] bases = { 'A', 'T', 'C', 'G' };
+							nextGenes.add(bases[rand.nextInt(bases.length)]);
+						}
+					}
+					ImGui.endDragDropTarget();
+				}
+			}
+			ImGui.endTable();
+		}
+	}
 
-    // Small drag source for each next gene
-    private void drawNextGeneDragSource(Character c, int index) {
-        ImGui.pushID(index);
-        ImGui.button(String.valueOf(c));
-        if (ImGui.beginDragDropSource()) {
-            ImGui.setDragDropPayload("NEXT_CHAR", index, ImGuiCond.Once);
-            ImGui.text("Replacing with: " + c);
-            ImGui.endDragDropSource();
-        }
-        ImGui.popID();
-    }
+	// Small drag source for each next gene
+	private void drawNextGeneDragSource(Character c, int index) {
+		ImGui.pushID(index);
+		ImGui.button(String.valueOf(c));
+		if (ImGui.beginDragDropSource()) {
+			ImGui.setDragDropPayload("NEXT_CHAR", index, ImGuiCond.Once);
+			ImGui.text("Replacing with: " + c);
+			ImGui.endDragDropSource();
+		}
+		ImGui.popID();
+	}
 
-    private float computeMatchPercentage() {
-        if (targetGene == null || targetGene.isEmpty()) return 0f;
-        if (currentGene == null || currentGene.length() == 0) return 0f;
+	private float computeMatchPercentage() {
+		if (targetGene == null || targetGene.isEmpty())
+			return 0f;
+		if (currentGene == null || currentGene.length() == 0)
+			return 0f;
 
-        int matchCount = 0;
-        int length = Math.min(currentGene.length(), targetGene.length());
-        for (int i = 0; i < length; i++) {
-            if (currentGene.charAt(i) == targetGene.charAt(i)) {
-                matchCount++;
-            }
-        }
-        return (matchCount / (float) targetGene.length()) * 100f;
-    }
+		int matchCount = 0;
+		int length = Math.min(currentGene.length(), targetGene.length());
+		for (int i = 0; i < length; i++) {
+			if (currentGene.charAt(i) == targetGene.charAt(i)) {
+				matchCount++;
+			}
+		}
+		return (matchCount / (float) targetGene.length()) * 100f;
+	}
 
-    private void swap(int i, int j) {
-        if (i < 0 || j < 0 || i >= currentGene.length() || j >= currentGene.length()) {
-            return;
-        }
-        char temp = currentGene.charAt(i);
-        currentGene.setCharAt(i, currentGene.charAt(j));
-        currentGene.setCharAt(j, temp);
-        movesLeft--;
-    }
+	private void swap(int i, int j) {
+		if (i < 0 || j < 0 || i >= currentGene.length() || j >= currentGene.length()) {
+			return;
+		}
+		char temp = currentGene.charAt(i);
+		currentGene.setCharAt(i, currentGene.charAt(j));
+		currentGene.setCharAt(j, temp);
+		movesLeft--;
+	}
 
-    private void replaceGene(int index, char nucleotide) {
-        if (index >= 0 && index < currentGene.length()) {
-            currentGene.setCharAt(index, nucleotide);
-            movesLeft--;
-        }
-    }
+	private void replaceGene(int index, char nucleotide) {
+		if (index >= 0 && index < currentGene.length()) {
+			currentGene.setCharAt(index, nucleotide);
+			movesLeft--;
+		}
+	}
 
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
-    @Override
-    public String getMenuName() {
-        return core.getLanguage("play");
-    }
+	@Override
+	public String getMenuName() {
+		return core.getLanguage("play");
+	}
 
-    @Override
-    public void scroll(long window, double xoffset, double yoffset) {
-        // No scrolling needed
-    }
+	@Override
+	public void scroll(long window, double xoffset, double yoffset) {
+		// No scrolling needed
+	}
 
-    @Override
-    public void mouseButton(long window, int button, int action, int mods) {
-        // No special mouse handling needed
-    }
+	@Override
+	public void mouseButton(long window, int button, int action, int mods) {
+		// No special mouse handling needed
+	}
 
-    @Override
-    public void key(long window, int key, int scancode, int action, int mods) {
-        // No special keyboard handling needed
-    }
+	@Override
+	public void key(long window, int key, int scancode, int action, int mods) {
+		// No special keyboard handling needed
+	}
 
-    @Override
-    public void render(float delta) {
-        // We handle rendering via ImGui
-    }
+	@Override
+	public void render(float delta) {
+		// We handle rendering via ImGui
+	}
 
-    @Override
-    protected int getOrder() {
-        return 0;
-    }
+	@Override
+	protected int getOrder() {
+		return 0;
+	}
 }
