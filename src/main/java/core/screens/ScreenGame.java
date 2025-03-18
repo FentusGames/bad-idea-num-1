@@ -24,7 +24,6 @@ public class ScreenGame extends Screen {
 	private int movesLeft;
 	private int score;
 
-	// Our list of upcoming random nucleotides
 	private List<Character> nextGenes;
 
 	private String geneDescription;
@@ -110,22 +109,18 @@ public class ScreenGame extends Screen {
 		float matchPercentage = computeMatchPercentage();
 		ImGui.text(String.format("Match: %.2f%%", matchPercentage));
 
-		// Draw target gene
 		ImGui.text("Target Gene:");
 		drawTargetGeneTable();
 
-		// Draw current gene
 		ImGui.text("Current Gene:");
 		drawCurrentGeneTable();
 
-		// Next Genes
 		ImGui.text("Insertable Genes:");
 		for (int i = 0; i < nextGenes.size(); i++) {
 			ImGui.sameLine();
 			drawNextGeneDragSource(nextGenes.get(i), i);
 		}
 
-		// Win check
 		if (currentGene.toString().equals(targetGene)) {
 			ImGui.text("Success! You fixed the gene.");
 			score += 100;
@@ -136,7 +131,6 @@ public class ScreenGame extends Screen {
 
 		ImGui.end();
 
-		// Failure popup
 		if (ImGui.beginPopupModal("Gene Failure")) {
 			ImGui.text("You failed to match the gene!");
 			ImGui.separator();
@@ -156,7 +150,6 @@ public class ScreenGame extends Screen {
 		}
 	}
 
-	// Table for the target gene (only 1 row, multiple columns).
 	private void drawTargetGeneTable() {
 		if (targetGene == null || targetGene.isEmpty()) {
 			ImGui.text("[Empty]");
@@ -168,17 +161,13 @@ public class ScreenGame extends Screen {
 			return;
 		}
 
-		// Start the table
 		if (ImGui.beginTable("TargetGeneTable", length)) {
-			// 1) Setup columns BEFORE drawing any rows
 			for (int col = 0; col < length; col++) {
 				ImGui.tableSetupColumn("TargetCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
 			}
 
-			// 2) Lock the layout by starting row(s)
 			ImGui.tableNextRow();
 
-			// 3) Fill each column
 			for (int i = 0; i < length; i++) {
 				ImGui.tableSetColumnIndex(i);
 				String text = String.valueOf(targetGene.charAt(i));
@@ -188,7 +177,6 @@ public class ScreenGame extends Screen {
 		}
 	}
 
-	// Table for the current gene: single row, multiple columns
 	private void drawCurrentGeneTable() {
 		if (currentGene == null || currentGene.length() == 0) {
 			ImGui.text("[Empty]");
@@ -201,15 +189,12 @@ public class ScreenGame extends Screen {
 		}
 
 		if (ImGui.beginTable("CurrentGeneTable", length)) {
-			// 1) Setup columns
 			for (int col = 0; col < length; col++) {
 				ImGui.tableSetupColumn("CurrentCol" + col, ImGuiTableColumnFlags.WidthFixed, 50f);
 			}
 
-			// 2) Begin row
 			ImGui.tableNextRow();
 
-			// 3) fill columns
 			for (int i = 0; i < length; i++) {
 				ImGui.tableSetColumnIndex(i);
 				boolean isCorrect = (i < targetGene.length() && currentGene.charAt(i) == targetGene.charAt(i));
@@ -228,14 +213,12 @@ public class ScreenGame extends Screen {
 				ImGui.button(label, buttonWidth, buttonHeight);
 				ImGui.popStyleColor(2);
 
-				// DRAG SOURCE
 				if (ImGui.beginDragDropSource()) {
 					ImGui.setDragDropPayload("CELL_INDEX", i, ImGuiCond.Once);
 					ImGui.text("Dragging cell " + i);
 					ImGui.endDragDropSource();
 				}
 
-				// DRAG TARGET
 				if (ImGui.beginDragDropTarget()) {
 					Object cellPayload = ImGui.acceptDragDropPayload("CELL_INDEX");
 					if (cellPayload != null) {
@@ -265,7 +248,6 @@ public class ScreenGame extends Screen {
 		}
 	}
 
-	// Small drag source for each next gene
 	private void drawNextGeneDragSource(Character c, int index) {
 		ImGui.pushID(index);
 		ImGui.button(String.valueOf(c));
@@ -322,22 +304,22 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void scroll(long window, double xoffset, double yoffset) {
-		// No scrolling needed
+
 	}
 
 	@Override
 	public void mouseButton(long window, int button, int action, int mods) {
-		// No special mouse handling needed
+
 	}
 
 	@Override
 	public void key(long window, int key, int scancode, int action, int mods) {
-		// No special keyboard handling needed
+
 	}
 
 	@Override
 	public void render(float delta) {
-		// We handle rendering via ImGui
+
 	}
 
 	@Override
