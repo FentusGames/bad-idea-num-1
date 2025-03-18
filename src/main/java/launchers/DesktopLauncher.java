@@ -59,7 +59,7 @@ public class DesktopLauncher {
 		// Client Settings
 		core.setWidth(1366);
 		core.setHeight(768);
-		core.setTitle("Bad Idea #1");
+		core.setTitle("Game Client");
 		core.setFontMinSize(12);
 		core.setFontMaxSize(72);
 		core.setFontStepAmt(2);

@@ -5,9 +5,9 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fentusgames</groupId>
-	<artifactId>lurking-exploit-client</artifactId>
+	<artifactId>game-client</artifactId>
 	<packaging>jar</packaging>
-	<name>Lurking Exploit Client</name>
+	<name>Game Client</name>
 
 	<version>1.0.0</version>
 
