@@ -25,7 +25,7 @@ import org.json.JSONObject;
 
 public class GeneProcessor {
 	private static final Pattern ENCODED_SYMBOL_PATTERN = Pattern.compile("^[ATCG]{20}$");
-	private static final Set<String> REQUIRED_KEYS = Set.of("description", "diseases", "encodedSymbol", "gene_id");
+	private static final Set<String> REQUIRED_KEYS = Set.of("description", "disease", "encodedSymbol", "gene_id");
 
 	private static final String OLLAMA_API_URL = "http://localhost:11434/api/chat";
 	private static final String MODEL_NAME = "gemma3:1b";
@@ -88,7 +88,7 @@ public class GeneProcessor {
                     gene_id TEXT NOT NULL,
                     encodedSymbol TEXT NOT NULL,
                     description TEXT,
-                    diseases TEXT
+                    disease TEXT
                 );
                 """;
 			stmt.execute(createTableSQL);
@@ -107,6 +107,8 @@ public class GeneProcessor {
 			String prompt = createPrompt(description);
 			String ollamaResponse = queryOllama(threadHttpClient, prompt);
 
+			System.out.println(ollamaResponse);
+			
 			if (!ollamaResponse.isEmpty()) {
 				JSONObject jsonObject = processJsonResponse(ollamaResponse, geneId, encodedSymbol);
 				if (jsonObject != null && validateGeneEntry(jsonObject)) {
@@ -120,12 +122,12 @@ public class GeneProcessor {
 	}
 
 	private static void saveToDatabase(JSONObject geneObject) {
-		String sql = "INSERT INTO genes (gene_id, encodedSymbol, description, diseases) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO genes (gene_id, encodedSymbol, description, disease) VALUES (?, ?, ?, ?)";
 		try (Connection conn = DriverManager.getConnection(DB_URL); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 			pstmt.setString(1, geneObject.getString("gene_id"));
 			pstmt.setString(2, geneObject.getString("encodedSymbol"));
 			pstmt.setString(3, geneObject.getString("description"));
-			pstmt.setString(4, geneObject.getJSONArray("diseases").toString().replace("[", "").replace("]", "").replace("\"", "").trim());
+			pstmt.setString(4, geneObject.getString("disease"));
 
 			pstmt.executeUpdate();
 			System.out.println("Saved to DB: " + geneObject.toString());
@@ -177,7 +179,7 @@ public class GeneProcessor {
                 Quickly Answer:
                 
                 Provide a brief description of this gene's function, no more than 10 words. 
-                Then, list up to three plausible or possible diseases.
+                Then, come up with a funny unrealistic and grotest disease, infection and or mutation.
                 If no known information exists, return an empty JSON object {}.
                 
                 Description: [%s].
@@ -185,10 +187,8 @@ public class GeneProcessor {
                 Output format example:
                 {
                   "description": "Regulates cell wall synthesis.",
-                  "diseases": ["Pneumonia", "Septicemia"]
-                }
-                If no diseases are known, return:
-                {}""", description);
+                  "disease": "Pneumonia"
+                }""", description);
 	}
 
 	private static String queryOllama(HttpClient client, String prompt) {
@@ -213,6 +213,6 @@ public class GeneProcessor {
 	}
 
 	public static boolean validateGeneEntry(JSONObject geneObject) {
-		return geneObject != null && geneObject.keySet().equals(REQUIRED_KEYS) && geneObject.get("description") instanceof String && geneObject.get("diseases") instanceof JSONArray && ENCODED_SYMBOL_PATTERN.matcher(geneObject.getString("encodedSymbol")).matches();
+		return geneObject != null && geneObject.keySet().equals(REQUIRED_KEYS) && geneObject.get("description") instanceof String && geneObject.get("disease") instanceof String && ENCODED_SYMBOL_PATTERN.matcher(geneObject.getString("encodedSymbol")).matches();
 	}
 }
