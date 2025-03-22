@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
+import core.assets.processors.FontAssetProcessor;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
@@ -56,6 +57,7 @@ public class Core {
 	private DSLContext db;
 
 	private boolean debug = false;
+	private FontAssetProcessor fontProcessor;
 
 	public void init() {
 		initWindow();
@@ -127,7 +129,7 @@ public class Core {
 		ImGuiIO io = ImGui.getIO();
 		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
-		// @TODO: Load fonts here
+		fontProcessor.process();
 
 		// @TODO: Pull data from config file. Make converter for Style Editor. Use the style editor to allow custom styles.
 
@@ -244,11 +246,11 @@ public class Core {
 			imGuiGlfw.newFrame();
 			ImGui.newFrame();
 
-			// @TODO: DEFUALT FONT ImGui.pushFont(getFont("default", 16));
+			ImGui.pushFont(fontProcessor.getFont("default", 14));
 
 			screen.imgui(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 
-			// @TODO: DEFUALT FONT ImGui.popFont();
+			ImGui.popFont();
 
 			ImGui.render();
 			imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -381,5 +383,13 @@ public class Core {
 
 	public DSLContext getDB() {
 		return db;
+	}
+
+	public FontAssetProcessor getFontProcessor() {
+		return fontProcessor;
+	}
+
+	public void setFontProcessor(FontAssetProcessor fontProcessor) {
+		this.fontProcessor = fontProcessor;
 	}
 }
