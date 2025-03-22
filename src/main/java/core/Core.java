@@ -33,9 +33,6 @@ public class Core {
 	private int width;
 	private int height;
 	private String title;
-	private int fontMinSize;
-	private int fontMaxSize;
-	private int fontStepAmt;
 
 	private int[] windowX = new int[1];
 	private int[] windowY = new int[1];
@@ -340,18 +337,6 @@ public class Core {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public void setFontMinSize(int fontMinSize) {
-		this.fontMinSize = fontMinSize;
-	}
-
-	public void setFontMaxSize(int fontMaxSize) {
-		this.fontMaxSize = fontMaxSize;
-	}
-
-	public void setFontStepAmt(int fontStepAmt) {
-		this.fontStepAmt = fontStepAmt;
 	}
 
 	public void exit() {
