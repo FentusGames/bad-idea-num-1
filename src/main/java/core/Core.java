@@ -7,18 +7,26 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
@@ -69,6 +77,33 @@ public class Core {
 	private Map<String, String> language;
 
 	private boolean debug = false;
+
+	private static final Logger logger = LoggerFactory.getLogger(Core.class);
+
+	public void loadDatabase(String path) {
+		try {
+			Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path);
+			this.db = DSL.using(connection);
+			logger.info("Connected to database: {}", path);
+		} catch (SQLException e) {
+			logger.error("Failed to connect to database: {}", path, e);
+		}
+	}
+
+	public void loadLanguage(String resourceName) {
+		Yaml yaml = new Yaml();
+
+		try (InputStream inputStream = Yaml.class.getClassLoader().getResourceAsStream(resourceName)) {
+			if (inputStream == null) {
+				throw new RuntimeException("Language file not found: " + resourceName);
+			}
+
+			this.language = yaml.load(inputStream);
+			logger.info("Loaded language file: {}", resourceName);
+		} catch (Exception e) {
+			logger.error("Failed to load language file: {}", resourceName, e);
+		}
+	}
 
 	public void init() {
 		initWindow();
@@ -449,14 +484,14 @@ public class Core {
 
 			System.exit(-1); // Stops LWJGL from crashing.
 		}
-		
+
 		return language.get(key);
 	}
 
 	public void setDB(DSLContext db) {
 		this.db = db;
 	}
-	
+
 	public DSLContext getDB() {
 		return db;
 	}
