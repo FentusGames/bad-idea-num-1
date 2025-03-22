@@ -9,12 +9,6 @@ public class DesktopLauncher {
 		// Core client passed form screen to screen.
 		Core core = new Core();
 
-		// Load database
-		core.loadDatabase("game.db");
-
-		// Load language
-		core.loadLanguage("en_US.yml");
-
 		// Client Settings
 		core.setWidth(1366);
 		core.setHeight(768);

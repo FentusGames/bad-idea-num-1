@@ -48,7 +48,7 @@ public class ScreenGame extends Screen {
 	}
 	
 	public String getMenuName() {
-		return core.getLanguage("play");
+		return "Play"; // @TODO: Load via en_US
 	}
 	
 	public int getOrder() {

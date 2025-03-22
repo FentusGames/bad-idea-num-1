@@ -6,35 +6,21 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.File;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
-import imgui.ImFont;
-import imgui.ImFontAtlas;
-import imgui.ImFontConfig;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
@@ -65,45 +51,14 @@ public class Core {
 	// Current Screen
 	private Screen screen;
 
-	// Fonts
-	private HashMap<String, HashMap<Integer, ImFont>> fonts = new HashMap<String, HashMap<Integer, ImFont>>();
-
 	// GLFW callbacks
 	public ScrollCallback scrollCallback;
 	public MouseButtonCallback mouseButtonCallback;
 	public KeyCallback keyCallback;
 
 	private DSLContext db;
-	private Map<String, String> language;
 
 	private boolean debug = false;
-
-	private static final Logger logger = LoggerFactory.getLogger(Core.class);
-
-	public void loadDatabase(String path) {
-		try {
-			Connection connection = DriverManager.getConnection("jdbc:sqlite:" + path);
-			this.db = DSL.using(connection);
-			logger.info("Connected to database: {}", path);
-		} catch (SQLException e) {
-			logger.error("Failed to connect to database: {}", path, e);
-		}
-	}
-
-	public void loadLanguage(String resourceName) {
-		Yaml yaml = new Yaml();
-
-		try (InputStream inputStream = Yaml.class.getClassLoader().getResourceAsStream(resourceName)) {
-			if (inputStream == null) {
-				throw new RuntimeException("Language file not found: " + resourceName);
-			}
-
-			this.language = yaml.load(inputStream);
-			logger.info("Loaded language file: {}", resourceName);
-		} catch (Exception e) {
-			logger.error("Failed to load language file: {}", resourceName, e);
-		}
-	}
 
 	public void init() {
 		initWindow();
@@ -175,7 +130,7 @@ public class Core {
 		ImGuiIO io = ImGui.getIO();
 		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
-		imguiLoadFonts(io);
+		// @TODO: Load fonts here
 
 		// @TODO: Pull data from config file. Make converter for Style Editor. Use the style editor to allow custom styles.
 
@@ -202,6 +157,7 @@ public class Core {
 		float[][] colors = ImGui.getStyle().getColors();
 
 		// @formatter:off
+		// @TODO: Load a yml for style.
 		colors[ImGuiCol.Text]                   = new float[] {1.00f, 1.00f, 1.00f, 1.00f};
 		colors[ImGuiCol.TextDisabled]           = new float[] {0.49f, 0.49f, 0.49f, 1.00f};
 		colors[ImGuiCol.WindowBg]               = new float[] {0.07f, 0.07f, 0.07f, 1.00f};
@@ -291,11 +247,11 @@ public class Core {
 			imGuiGlfw.newFrame();
 			ImGui.newFrame();
 
-			ImGui.pushFont(getFont("default", 16));
+			// @TODO: DEFUALT FONT ImGui.pushFont(getFont("default", 16));
 
 			screen.imgui(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 
-			ImGui.popFont();
+			// @TODO: DEFUALT FONT ImGui.popFont();
 
 			ImGui.render();
 			imGuiGl3.renderDrawData(ImGui.getDrawData());
@@ -386,10 +342,6 @@ public class Core {
 		this.title = title;
 	}
 
-	public ImFont getFont(String name, int size) {
-		return fonts.get(name).get(size);
-	}
-
 	public void setFontMinSize(int fontMinSize) {
 		this.fontMinSize = fontMinSize;
 	}
@@ -400,34 +352,6 @@ public class Core {
 
 	public void setFontStepAmt(int fontStepAmt) {
 		this.fontStepAmt = fontStepAmt;
-	}
-
-	private void imguiLoadFonts(ImGuiIO io) {
-		ImFontAtlas fontAtlas = io.getFonts();
-
-		ImFontConfig fontConfig = new ImFontConfig();
-		fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesDefault());
-
-		File folder = new File("assets/fonts");
-
-		// Get all the files in the folder
-		// Iterate through each file in the folder
-		for (File file : folder.listFiles()) {
-			if (file.isFile() && file.getName().toLowerCase().endsWith(".ttf")) {
-				String fileName = file.getName();
-
-				int dotIndex = fileName.lastIndexOf(".");
-				if (dotIndex > 0) {
-					HashMap<Integer, ImFont> sizes = fonts.getOrDefault(fileName.substring(0, dotIndex), new HashMap<>());
-
-					for (int size = fontMinSize; size <= fontMaxSize; size += fontStepAmt) {
-						sizes.put(size, fontAtlas.addFontFromFileTTF(file.getPath(), size, fontConfig));
-					}
-
-					fonts.put(fileName.substring(0, dotIndex), sizes);
-				}
-			}
-		}
 	}
 
 	public void exit() {
@@ -464,28 +388,6 @@ public class Core {
 
 	public boolean getDebug() {
 		return debug;
-	}
-
-	public void setLanguage(Map<String, String> language) {
-		this.language = language;
-	}
-
-	public String getLanguage(String key) {
-		if (language == null) {
-			System.err.println("language can't be null.");
-			exit();
-
-			System.exit(-1); // Stops LWJGL from crashing.
-		}
-
-		if (!language.containsKey(key)) {
-			System.err.println(String.format("Key \"%s\" missing.", key));
-			exit();
-
-			System.exit(-1); // Stops LWJGL from crashing.
-		}
-
-		return language.get(key);
 	}
 
 	public void setDB(DSLContext db) {

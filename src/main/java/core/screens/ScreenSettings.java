@@ -48,7 +48,7 @@ public class ScreenSettings extends Screen {
 	}
 
 	public String getMenuName() {
-		return core.getLanguage("settings");
+		return "Settings"; // @TODO: Load via en_US
 	}
 
 	public int getOrder() {
