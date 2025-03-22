@@ -13,9 +13,6 @@ public class DesktopLauncher {
 		core.setWidth(1366);
 		core.setHeight(768);
 		core.setTitle("Game Client");
-		core.setFontMinSize(12);
-		core.setFontMaxSize(72);
-		core.setFontStepAmt(2);
 
 		// Debug
 		core.setDebug(true);
