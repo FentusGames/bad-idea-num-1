@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		// Client Settings
 		core.setWidth(1366);
 		core.setHeight(768);
-		core.setTitle("Game Client");
+		core.setTitle("Game Client"); // @TODO: Load via en_US
 
 		// Debug
 		core.setDebug(true);
