@@ -5,3 +5,12 @@ play: Play
 load: Load
 settings: Settings
 exit: Exit
+
+fps: FPS
+ups: UPS
+
+id: ID
+gene_id: Gene ID 
+encodedSymbol: Encoded Symbol
+description: Description
+diseases: Diseases

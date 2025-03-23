@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Paths;
 
 import org.jooq.DSLContext;
 import org.lwjgl.glfw.Callbacks;
@@ -17,9 +18,9 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import core.assets.processors.FontAssetProcessor;
-import core.assets.processors.LangProcessor;
-import core.assets.processors.SQLiteProcessor;
+import core.assets.processors.Fonts;
+import core.assets.processors.Language;
+import core.assets.processors.SQLite;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
@@ -59,9 +60,9 @@ public class Core {
 	private boolean debug = false;
 
 	// Processors
-	private FontAssetProcessor fontProcessor;
-	private LangProcessor langProcessor;
-	private SQLiteProcessor sqliteProcessor;
+	private Fonts fonts;
+	private Language language;
+	private SQLite sqlite;
 
 	public void init() {
 		initWindow();
@@ -133,7 +134,7 @@ public class Core {
 		ImGuiIO io = ImGui.getIO();
 		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
-		fontProcessor.process();
+		fonts.loadFrom(Paths.get("assets/fonts/"));
 
 		// @TODO: Pull data from config file. Make converter for Style Editor. Use the style editor to allow custom styles.
 
@@ -249,7 +250,7 @@ public class Core {
 			imGuiGlfw.newFrame();
 			ImGui.newFrame();
 
-			ImGui.pushFont(fontProcessor.getFont("default", 14));
+			ImGui.pushFont(fonts.getFont("default", 14));
 
 			screen.imgui(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 
@@ -261,7 +262,7 @@ public class Core {
 			frames++;
 
 			if (System.currentTimeMillis() - timer > 1000) {
-				glfwSetWindowTitle(windowPtr, String.format("%s FPS: %s UPS: %s", title, frames, updates));
+				glfwSetWindowTitle(windowPtr, String.format("%s %s: %s %s: %s", title, language.get("fps"), frames, language.get("ups"), updates));
 				frames = 0;
 				updates = 0;
 				timer += 1000;
@@ -380,23 +381,23 @@ public class Core {
 		return debug;
 	}
 
-	public void setFontProcessor(FontAssetProcessor fontProcessor) {
-		this.fontProcessor = fontProcessor;
+	public void setFontProcessor(Fonts fontProcessor) {
+		this.fonts = fontProcessor;
 	}
 
-	public void setLangProcessor(LangProcessor langProcessor) {
-		this.langProcessor = langProcessor;
+	public void setLanguage(Language language) {
+		this.language = language;
 	}
 
 	public String getLang(String key) {
-		return langProcessor.get(key);
+		return language.get(key);
 	}
 
-	public void setSQLiteProcessor(SQLiteProcessor sqliteProcessor) {
-		this.sqliteProcessor = sqliteProcessor;
+	public void setSQLite(SQLite sqlite) {
+		this.sqlite = sqlite;
 	}
 
-	public DSLContext getDB(String key) {
-		return sqliteProcessor.getDB(key);
+	public DSLContext getDB(String name) {
+		return sqlite.getDB(name);
 	}
 }

@@ -1,48 +1,42 @@
 package launchers;
 
+import java.nio.file.Paths;
+
 import core.Core;
-import core.assets.AssetLoader;
-import core.assets.processors.FontAssetProcessor;
-import core.assets.processors.LangProcessor;
-import core.assets.processors.SQLiteProcessor;
+import core.assets.processors.Fonts;
+import core.assets.processors.Language;
+import core.assets.processors.SQLite;
 import core.screens.ScreenMainMenu;
 
 public class DesktopLauncher {
 	public static void main(String[] args) {
-		// Asset Loader
-		AssetLoader loader = new AssetLoader();
-
 		// Processor Lang
-		LangProcessor langProcessor = new LangProcessor();
-		loader.registerProcessor("languages/" + (args.length == 0 || args[0] == null ? "en_US" : args[0]), langProcessor); // Load from args
+		Language language = new Language();
+		language.loadFrom(Paths.get("assets/languages/" + (args.length == 0 || args[0] == null ? "en_US" : args[0]))); // Load from args
 
 		// Processor Font
-		FontAssetProcessor fontProcessor = new FontAssetProcessor();
-		loader.registerProcessor("fonts/", fontProcessor);
+		Fonts fonts = new Fonts();
 
 		// Processor SQLite
-		SQLiteProcessor sqliteProcessor = new SQLiteProcessor();
-		loader.registerProcessor("sqlite/", sqliteProcessor);
-
-		// Asset Loader
-		loader.loadAssets("assets");
+		SQLite sqlite = new SQLite();
+		sqlite.loadFrom(Paths.get("assets/sqlite/"));
 
 		// Core client passed form screen to screen.
 		Core core = new Core();
 
 		// Load Processor Lang
-		core.setLangProcessor(langProcessor);
+		core.setLanguage(language);
 
 		// Load Processor Font
-		core.setFontProcessor(fontProcessor);
+		core.setFontProcessor(fonts);
 
 		// Load Processor SQLite
-		core.setSQLiteProcessor(sqliteProcessor);
+		core.setSQLite(sqlite);
 
 		// Client Settings
 		core.setWidth(1366);
 		core.setHeight(768);
-		core.setTitle(langProcessor.get("title"));
+		core.setTitle(language.get("title"));
 
 		// Debug
 		core.setDebug(true);
