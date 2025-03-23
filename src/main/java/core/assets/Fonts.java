@@ -1,4 +1,4 @@
-package core.assets.processors;
+package core.assets;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

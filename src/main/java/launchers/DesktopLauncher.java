@@ -3,9 +3,9 @@ package launchers;
 import java.nio.file.Paths;
 
 import core.Core;
-import core.assets.processors.Fonts;
-import core.assets.processors.Language;
-import core.assets.processors.SQLite;
+import core.assets.Fonts;
+import core.assets.Language;
+import core.assets.SQLite;
 import core.screens.ScreenMainMenu;
 
 public class DesktopLauncher {

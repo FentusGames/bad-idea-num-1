@@ -18,9 +18,9 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import core.assets.processors.Fonts;
-import core.assets.processors.Language;
-import core.assets.processors.SQLite;
+import core.assets.Fonts;
+import core.assets.Language;
+import core.assets.SQLite;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;

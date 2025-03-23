@@ -1,4 +1,4 @@
-package core.assets.processors;
+package core.assets;
 
 import java.io.InputStream;
 import java.nio.file.Files;
