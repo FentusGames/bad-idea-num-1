@@ -18,6 +18,8 @@ import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import core.assets.processors.FontAssetProcessor;
+import core.assets.processors.LangProcessor;
+import core.assets.processors.SQLiteProcessor;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
@@ -54,10 +56,12 @@ public class Core {
 	public MouseButtonCallback mouseButtonCallback;
 	public KeyCallback keyCallback;
 
-	private DSLContext db;
-
 	private boolean debug = false;
+
+	// Processors
 	private FontAssetProcessor fontProcessor;
+	private LangProcessor langProcessor;
+	private SQLiteProcessor sqliteProcessor;
 
 	public void init() {
 		initWindow();
@@ -156,7 +160,6 @@ public class Core {
 		float[][] colors = ImGui.getStyle().getColors();
 
 		// @formatter:off
-		// @TODO: Load a yml for style.
 		colors[ImGuiCol.Text]                   = new float[] {1.00f, 1.00f, 1.00f, 1.00f};
 		colors[ImGuiCol.TextDisabled]           = new float[] {0.49f, 0.49f, 0.49f, 1.00f};
 		colors[ImGuiCol.WindowBg]               = new float[] {0.07f, 0.07f, 0.07f, 1.00f};
@@ -377,19 +380,23 @@ public class Core {
 		return debug;
 	}
 
-	public void setDB(DSLContext db) {
-		this.db = db;
-	}
-
-	public DSLContext getDB() {
-		return db;
-	}
-
-	public FontAssetProcessor getFontProcessor() {
-		return fontProcessor;
-	}
-
 	public void setFontProcessor(FontAssetProcessor fontProcessor) {
 		this.fontProcessor = fontProcessor;
+	}
+
+	public void setLangProcessor(LangProcessor langProcessor) {
+		this.langProcessor = langProcessor;
+	}
+
+	public String getLang(String key) {
+		return langProcessor.get(key);
+	}
+
+	public void setSQLiteProcessor(SQLiteProcessor sqliteProcessor) {
+		this.sqliteProcessor = sqliteProcessor;
+	}
+
+	public DSLContext getDB(String key) {
+		return sqliteProcessor.getDB(key);
 	}
 }

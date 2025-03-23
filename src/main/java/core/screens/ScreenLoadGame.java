@@ -49,7 +49,7 @@ public class ScreenLoadGame extends Screen {
 
 	@Override
 	protected String getMenuName() {
-		return "Load"; // @TODO: Load via en_US
+		return core.getLang("load");
 	}
 
 	public int getOrder() {

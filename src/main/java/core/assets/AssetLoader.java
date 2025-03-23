@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class AssetLoader {
-
 	private final Map<String, AssetProcessor<?>> processors = new HashMap<>();
 
 	public void registerProcessor(String folder, AssetProcessor<?> processor) {
