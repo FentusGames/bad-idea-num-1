@@ -108,7 +108,7 @@ public class Core {
 
 		GL.createCapabilities();
 
-		// TODO: glfwSetIcon(windowPtr, "assets/icons/favicon.png");
+		glfwSetIcon(windowPtr, "assets/icons/favicon.png");
 
 		glfwSetScrollCallback(windowPtr, (window, xoffset, yoffset) -> {
 			if (scrollCallback != null) {
