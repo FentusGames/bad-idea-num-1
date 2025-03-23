@@ -24,7 +24,7 @@ public class ScreenGame extends Screen {
 
 		// TODO: Remove Example JOOQ
 		GenesRecord genesRecord = db.selectFrom(GENES).orderBy(DSL.rand()).limit(1).fetchOne();
-		logger.info(genesRecord.toString());
+		logger.info("\n" + genesRecord.toString());
 	}
 
 	@Override
