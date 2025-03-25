@@ -46,13 +46,4 @@ public class ScreenLoadGame extends Screen {
 	public void key(long window, int key, int scancode, int action, int mods) {
 
 	}
-
-	@Override
-	protected String getMenuName() {
-		return core.getLang("load");
-	}
-
-	public int getOrder() {
-		return 1;
-	}
 }

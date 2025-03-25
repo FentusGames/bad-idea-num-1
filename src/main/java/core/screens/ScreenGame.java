@@ -93,12 +93,4 @@ public class ScreenGame extends Screen {
 	@Override
 	public void key(long window, int key, int scancode, int action, int mods) {
 	}
-
-	public String getMenuName() {
-		return core.getLang("play");
-	}
-
-	public int getOrder() {
-		return 0;
-	}
 }

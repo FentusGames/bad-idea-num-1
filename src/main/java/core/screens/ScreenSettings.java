@@ -46,12 +46,4 @@ public class ScreenSettings extends Screen {
 	public void key(long window, int key, int scancode, int action, int mods) {
 
 	}
-
-	public String getMenuName() {
-		return core.getLang("settings");
-	}
-
-	public int getOrder() {
-		return 2;
-	}
 }
