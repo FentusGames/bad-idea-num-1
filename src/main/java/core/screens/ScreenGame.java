@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
-import core.texture.Animation;
+import core.entities.Ship;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
 import jooq.generated.tables.records.GenesRecord;
@@ -21,8 +21,12 @@ public class ScreenGame extends Screen {
 	private DSLContext db = core.getDB("game");
 	private Result<GenesRecord> genesRecords;
 
-	private Animation animation;
 	private Vector3f animationPosition = new Vector3f(0, 0, 0);
+	private float angle = 0f;
+	private float radius = 0.1f; // Adjust radius as needed
+	private float speed = 0.02f; // Adjust speed as needed
+
+	private Ship ship = new Ship(core);
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -31,10 +35,9 @@ public class ScreenGame extends Screen {
 	@Override
 	public void init() {
 		super.init();
-		genesRecords = db.selectFrom(GENES).orderBy(DSL.rand()).limit(16).fetch();
+		genesRecords = db.selectFrom(GENES).orderBy(DSL.rand()).limit(8).fetch();
 
-		// Load Animation
-		animation = core.getAnimation("graphics_bomber");
+		ship.init();
 	}
 
 	@Override
@@ -45,15 +48,16 @@ public class ScreenGame extends Screen {
 
 		camera.apply();
 
-		if (animation != null) {
-			animation.update(delta);
-			animation.render(animationPosition.x, animationPosition.y, 1F / 10F, 1 / 10F); // One 10th of a GL unit.
-		}
+		ship.render(delta);
 	}
 
 	@Override
 	public void update(float delta) {
-		camera.setPosition(new Vector3f());
+		angle += speed * delta;
+		animationPosition.x = (float) Math.cos(angle) * radius;
+		animationPosition.y = (float) Math.sin(angle) * radius;
+
+		camera.setPosition(animationPosition);
 	}
 
 	@Override
@@ -82,9 +86,7 @@ public class ScreenGame extends Screen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (animation != null) {
-			animation = null;
-		}
+		ship.dispose();
 	}
 
 	@Override
