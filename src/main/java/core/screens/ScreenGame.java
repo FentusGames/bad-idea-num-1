@@ -22,9 +22,9 @@ public class ScreenGame extends Screen {
 	private Result<GenesRecord> genesRecords;
 
 	private Vector3f animationPosition = new Vector3f(0, 0, 0);
-	private float angle = 0f;
-	private float radius = 0.1f; // Adjust radius as needed
-	private float speed = 0.02f; // Adjust speed as needed
+	private float angle = 0F;
+	private float radius = 30F; // Adjust radius as needed
+	private float speed = 0.05F; // Adjust speed as needed
 
 	private Ship ship = new Ship(core);
 

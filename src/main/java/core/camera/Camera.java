@@ -14,7 +14,7 @@ public class Camera {
 	private long windowPtr;
 
 	private Vector3f position = new Vector3f();
-	private float zoomLevel = 1.0f;
+	private float zoomLevel = 1.0F / 256F;
 	private Matrix4f projectionMatrix;
 
 	public Camera(long windowPtr) {
