@@ -21,11 +21,6 @@ public class ScreenGame extends Screen {
 	private DSLContext db = core.getDB("game");
 	private Result<GenesRecord> genesRecords;
 
-	private Vector3f animationPosition = new Vector3f(0, 0, 0);
-	private float angle = 0F;
-	private float radius = 30F; // Adjust radius as needed
-	private float speed = 0.05F; // Adjust speed as needed
-
 	private Ship ship = new Ship(core);
 
 	public ScreenGame(Core core) {
@@ -38,6 +33,8 @@ public class ScreenGame extends Screen {
 		genesRecords = db.selectFrom(GENES).orderBy(DSL.rand()).limit(8).fetch();
 
 		ship.init();
+		ship.setPos(new Vector3f(0, 1, 0));
+		ship.getRotation().z = 30F;
 	}
 
 	@Override
@@ -53,11 +50,7 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void update(float delta) {
-		angle += speed * delta;
-		animationPosition.x = (float) Math.cos(angle) * radius;
-		animationPosition.y = (float) Math.sin(angle) * radius;
-
-		camera.setPosition(animationPosition);
+		ship.update(delta);
 	}
 
 	@Override
@@ -86,7 +79,6 @@ public class ScreenGame extends Screen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		ship.dispose();
 	}
 
 	@Override
