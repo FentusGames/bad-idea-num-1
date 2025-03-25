@@ -4,11 +4,8 @@ import core.Core;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
-import imgui.type.ImBoolean;
 
 public class ScreenMainMenu extends Screen {
-	private final ImBoolean showMenu = new ImBoolean(true);
-
 	public ScreenMainMenu(Core core) {
 		super(core);
 	}
@@ -32,10 +29,6 @@ public class ScreenMainMenu extends Screen {
 			ImGui.showDemoWindow();
 		}
 
-		if (!showMenu.get()) {
-			return;
-		}
-
 		float menuWidth = 400;
 
 		float centerX = (windowWidth - menuWidth) * 0.5f;
@@ -43,7 +36,7 @@ public class ScreenMainMenu extends Screen {
 
 		ImGui.setNextWindowSizeConstraints(menuWidth, -1, menuWidth, -1);
 
-		ImGui.begin("##MainMenu", showMenu, ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize);
+		ImGui.begin("##MainMenu", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize);
 
 		float menuHeight = ImGui.getWindowSizeY();
 
