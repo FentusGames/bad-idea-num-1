@@ -1,19 +1,17 @@
 package core.screens;
 
 import static jooq.generated.tables.Genes.GENES;
-import static org.lwjgl.opengl.GL11.*;
 
-import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
+import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
-import core.texture.Texture;
+import core.texture.Animation;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
 import jooq.generated.tables.records.GenesRecord;
@@ -23,9 +21,8 @@ public class ScreenGame extends Screen {
 	private DSLContext db = core.getDB("game");
 	private Result<GenesRecord> genesRecords;
 
-	private Texture texture;
-	private Vector3f texturePosition = new Vector3f(0, 0, 0);
-	private Quaternionf textureRotation = new Quaternionf();
+	private Animation animation;
+	private Vector3f animationPosition = new Vector3f(0, 0, 0);
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -36,50 +33,22 @@ public class ScreenGame extends Screen {
 		super.init();
 		genesRecords = db.selectFrom(GENES).orderBy(DSL.rand()).limit(16).fetch();
 
-		// Load Textures
-		texture = core.getTexture("graphics_delete_test_image_1");
+		// Load Animation
+		animation = core.getAnimation("graphics_bomber");
 	}
 
 	@Override
 	public void render(float delta) {
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
 		camera.apply();
 
-		if (texture != null && texture.getID() != 0) {
-			glEnable(GL_TEXTURE_2D); // Ensure texture mapping is enabled
-			glBindTexture(GL_TEXTURE_2D, texture.getID());
-
-			matrixQuad(texture, texturePosition, textureRotation);
-
-			glDisable(GL_TEXTURE_2D); // Disable after drawing
+		if (animation != null) {
+			animation.update(delta);
+			animation.render(animationPosition.x, animationPosition.y, 1F / 10F, 1 / 10F); // One 10th of a GL unit.
 		}
-	}
-
-	private void matrixQuad(Texture texture, Vector3f position, Quaternionf rotation) {
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-
-		glTranslatef(position.x, position.y, position.z);
-
-		// Convert Quaternion to Matrix and Apply Rotation
-		float[] matrix = new float[16];
-		rotation.get(new Matrix4f()).get(matrix);
-		glMultMatrixf(matrix);
-
-		// Scale it relative to the camera
-		float scaleFactor = 1F / 64F / 32F; // Adjust this based on your world scale
-		float width = texture.getWidth() * scaleFactor;
-		float height = texture.getHeight() * scaleFactor;
-
-		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0);
-		glVertex2f(-width / 2, -height / 2);
-		glTexCoord2f(1, 0);
-		glVertex2f(width / 2, -height / 2);
-		glTexCoord2f(1, 1);
-		glVertex2f(width / 2, height / 2);
-		glTexCoord2f(0, 1);
-		glVertex2f(-width / 2, height / 2);
-		glEnd();
 	}
 
 	@Override
@@ -113,10 +82,9 @@ public class ScreenGame extends Screen {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (texture != null) {
-			texture.dispose();
+		if (animation != null) {
+			animation = null;
 		}
-
 	}
 
 	@Override

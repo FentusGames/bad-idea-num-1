@@ -26,7 +26,7 @@ import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
-import core.texture.Texture;
+import core.texture.Animation;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
@@ -409,8 +409,8 @@ public class Core {
 	public void setTextures(Textures textures) {
 		this.textures = textures;
 	}
-	
-	public Texture getTexture(String key) {
-		return textures.getTexture(key);
+
+	public Animation getAnimation(String key) {
+		return textures.getAnimation(key);
 	}
 }
