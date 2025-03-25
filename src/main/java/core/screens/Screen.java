@@ -95,8 +95,8 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 				+ ImGui.getStyle().getItemSpacingY(); // Space above the Exit button
 
 		// Centering calculation using provided window dimensions
-		float posX = windowX + (windowWidth - menuWidth) * 0.5f;
-		float posY = windowY + (windowHeight - menuHeight) * 0.5f;
+		float posX = (windowWidth - menuWidth) * 0.5f;
+		float posY = (windowHeight - menuHeight) * 0.5f;
 
 		// Set position and size before creating the window
 		ImGui.setNextWindowPos(posX, posY, ImGuiCond.Always);

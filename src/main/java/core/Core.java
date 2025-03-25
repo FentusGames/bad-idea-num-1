@@ -28,7 +28,6 @@ import core.interfaces.ScrollCallback;
 import core.screens.Screen;
 import core.texture.Animation;
 import imgui.ImGui;
-import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
@@ -136,8 +135,6 @@ public class Core {
 
 	private void initImGui() {
 		ImGui.createContext();
-		ImGuiIO io = ImGui.getIO();
-		io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
 
 		fonts.loadFrom(Paths.get("assets/fonts/"));
 
