@@ -6,7 +6,7 @@
 
     <jdbc>
         <driver>org.sqlite.JDBC</driver>
-        <url>jdbc:sqlite:game.db</url>
+        <url>jdbc:sqlite:assets/sqlite/game.db</url>
         <user></user> <!-- SQLite does not require a username -->
         <password></password>
     </jdbc>
