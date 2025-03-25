@@ -6,6 +6,7 @@ import core.Core;
 import core.assets.Fonts;
 import core.assets.Language;
 import core.assets.SQLite;
+import core.assets.Textures;
 import core.screens.ScreenMainMenu;
 
 public class DesktopLauncher {
@@ -21,6 +22,9 @@ public class DesktopLauncher {
 		SQLite sqlite = new SQLite();
 		sqlite.loadFrom(Paths.get("assets/sqlite/"));
 
+		// Textures
+		Textures textures = new Textures();
+
 		// Core client passed form screen to screen.
 		Core core = new Core();
 
@@ -32,6 +36,9 @@ public class DesktopLauncher {
 
 		// Load Processor SQLite
 		core.setSQLite(sqlite);
+
+		// Load Processor Textures
+		core.setTextures(textures);
 
 		// Client Settings
 		core.setWidth(1366);

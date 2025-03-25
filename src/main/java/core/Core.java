@@ -21,10 +21,12 @@ import org.lwjgl.system.MemoryStack;
 import core.assets.Fonts;
 import core.assets.Language;
 import core.assets.SQLite;
+import core.assets.Textures;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
+import core.texture.Texture;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
@@ -63,6 +65,7 @@ public class Core {
 	private Fonts fonts;
 	private Language language;
 	private SQLite sqlite;
+	private Textures textures;
 
 	public void init() {
 		initWindow();
@@ -127,6 +130,8 @@ public class Core {
 				keyCallback.key(window, key, scancode, action, mods);
 			}
 		});
+
+		textures.loadFrom(Paths.get("assets/graphics/"));
 	}
 
 	private void initImGui() {
@@ -399,5 +404,13 @@ public class Core {
 
 	public DSLContext getDB(String name) {
 		return sqlite.getDB(name);
+	}
+
+	public void setTextures(Textures textures) {
+		this.textures = textures;
+	}
+	
+	public Texture getTexture(String key) {
+		return textures.getTexture(key);
 	}
 }
