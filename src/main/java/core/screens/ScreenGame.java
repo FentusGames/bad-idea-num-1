@@ -35,6 +35,7 @@ public class ScreenGame extends Screen {
 		ship.init();
 		ship.setPos(new Vector3f(0, 1, 0));
 		ship.getRotation().z = 30F;
+		ship.setColorMask(1, 0, 0.4F, 0.4F);
 	}
 
 	@Override

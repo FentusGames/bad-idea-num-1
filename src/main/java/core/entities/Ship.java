@@ -57,7 +57,7 @@ public class Ship implements Initable, Renderable, Updateable {
 		animation.setRotation(rotation);
 	}
 
-	public void setColorMask(int r, int g, int b, int a) {
+	public void setColorMask(float r, float g, float b, float a) {
 		animation.setR(r);
 		animation.setG(g);
 		animation.setB(b);
