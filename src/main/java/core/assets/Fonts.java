@@ -35,7 +35,7 @@ public class Fonts {
 				String name = filename.substring(0, filename.lastIndexOf('.')).toLowerCase();
 
 				String out = "";
-				for (int size = 14; size <= 64; size += 2) {
+				for (int size = 8; size <= 64; size += 2) {
 					ImFont font = io.getFonts().addFontFromFileTTF(file.toAbsolutePath().toString(), size);
 					if (font != null) {
 						String key = "fonts_" + name + "_" + size;
