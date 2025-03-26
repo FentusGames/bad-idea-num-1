@@ -46,6 +46,10 @@ public class ScreenMainMenu extends Screen {
 		float buttonWidth = ImGui.getContentRegionAvailX();
 		float buttonHeight = 50;
 
+		ImGui.pushFont(core.getFont("default", 44));
+		ImGui.text(core.getLang("title"));
+		ImGui.popFont();
+
 		if (ImGui.button("Play", buttonWidth, buttonHeight)) {
 			core.setScreen(new ScreenGame(core));
 		}

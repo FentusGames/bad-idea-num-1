@@ -27,6 +27,7 @@ import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
 import core.texture.Animation;
+import imgui.ImFont;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
@@ -409,5 +410,9 @@ public class Core {
 
 	public Animation getAnimation(String key) {
 		return textures.getAnimation(key);
+	}
+
+	public ImFont getFont(String name, int size) {
+		return fonts.getFont(name, size);
 	}
 }
