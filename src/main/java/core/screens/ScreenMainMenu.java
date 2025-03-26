@@ -46,7 +46,7 @@ public class ScreenMainMenu extends Screen {
 		float buttonWidth = ImGui.getContentRegionAvailX();
 		float buttonHeight = 50;
 
-		if (ImGui.button("Game Screen", buttonWidth, buttonHeight)) {
+		if (ImGui.button("Play", buttonWidth, buttonHeight)) {
 			core.setScreen(new ScreenGame(core));
 		}
 		if (ImGui.button("Load Game", buttonWidth, buttonHeight)) {
