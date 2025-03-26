@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import core.Core;
+import imgui.ImDrawList;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.ImVec4;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
-import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 
 public class ScreenMainMenu extends Screen {
+
 	private final Map<String, Float> buttonWidthOffsets = new HashMap<>();
 
 	public ScreenMainMenu(Core core) {
@@ -37,51 +41,97 @@ public class ScreenMainMenu extends Screen {
 
 		float menuWidth = 400;
 		float centerX = (windowWidth - menuWidth) * 0.5F;
+
 		ImGui.setNextWindowPos(centerX, 0, ImGuiCond.Appearing);
 		ImGui.setNextWindowSizeConstraints(menuWidth, -1, menuWidth, -1);
 		ImGui.begin("##MainMenu", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoBackground);
 
 		float menuHeight = ImGui.getWindowSizeY();
 		float centerY = (windowHeight - menuHeight) * 0.5F;
+
 		ImGui.setWindowPos(centerX, centerY);
-
-		float baseWidth = ImGui.getContentRegionAvailX() - 100;
-
 		ImGui.pushFont(core.getFont("default", 64));
 		ImGui.text(core.getLang("title"));
 		ImGui.popFont();
+		ImGui.spacing();
 
-		// Render buttons with left-aligned text
-		renderButton("Play", baseWidth, () -> core.setScreen(new ScreenGame(core)));
-		renderButton("Load Game", baseWidth, () -> core.setScreen(new ScreenLoadGame(core)));
-		renderButton("Settings", baseWidth, () -> core.setScreen(new ScreenSettings(core)));
-		renderButton("Exit", baseWidth, () -> System.exit(0));
+		if (customSlantedButton("Play")) {
+			core.setScreen(new ScreenGame(core));
+		}
+		ImGui.spacing();
+		if (customSlantedButton("Load Game")) {
+			core.setScreen(new ScreenLoadGame(core));
+		}
+		ImGui.spacing();
+		if (customSlantedButton("Settings")) {
+			core.setScreen(new ScreenSettings(core));
+		}
+		ImGui.spacing();
+		if (customSlantedButton("Exit")) {
+			System.exit(0);
+		}
 
+		ImGui.spacing();
 		ImGui.end();
 	}
 
-	private void renderButton(String label, float baseWidth, Runnable action) {
-		// Get or initialize the button's width offset
-		float widthOffset = buttonWidthOffsets.getOrDefault(label, 0F);
-		float buttonWidth = baseWidth + widthOffset;
+	private boolean customSlantedButton(String label) {
+		float baseWidth = 200f;
+		float height = 25f;
+		float slantOffset = 20f;
+		float extension = 4f;
+		float expansion = buttonWidthOffsets.getOrDefault(label, 0f);
+		float boundingWidth = baseWidth + expansion + slantOffset;
+		float boundingHeight = height;
+		float totalWidth = boundingWidth + extension;
 
-		// Push left-aligned text style
-		ImGui.pushStyleVar(ImGuiStyleVar.ButtonTextAlign, 0.0F, 0.5F); // Align text left (x=0.0), center vertically (y=0.5)
+		ImVec2 cursorPos = ImGui.getCursorScreenPos();
+		ImGui.invisibleButton(label, totalWidth, boundingHeight);
 
-		// Draw the button
-		if (ImGui.button(label, buttonWidth, 25)) {
-			action.run();
-		}
+		boolean hovered = ImGui.isItemHovered();
+		boolean active = ImGui.isItemActive();
 
-		// Pop style to restore previous settings
-		ImGui.popStyleVar();
+		int mainColor;
 
-		// Update the width offset based on hover state
-		if (ImGui.isItemHovered()) {
-			buttonWidthOffsets.put(label, 100F); // Expand on hover
+		if (active) {
+			mainColor = colorFromImVec4(ImGui.getStyle().getColor(ImGuiCol.ButtonActive));
+		} else if (hovered) {
+			mainColor = colorFromImVec4(ImGui.getStyle().getColor(ImGuiCol.ButtonHovered));
 		} else {
-			buttonWidthOffsets.put(label, 0F); // Reset when not hovered
+			mainColor = colorFromImVec4(ImGui.getStyle().getColor(ImGuiCol.Button));
 		}
+
+		if (hovered) {
+			buttonWidthOffsets.put(label, 100f);
+		} else {
+			buttonWidthOffsets.put(label, 0f);
+		}
+
+		ImDrawList drawList = ImGui.getWindowDrawList();
+
+		int whiteColor = 0xFFFFFFFF;
+
+		drawList.addQuadFilled(cursorPos.x + baseWidth + expansion, cursorPos.y, cursorPos.x + baseWidth + expansion + extension, cursorPos.y, cursorPos.x + baseWidth + expansion + slantOffset + extension, cursorPos.y + height, cursorPos.x + baseWidth + expansion + slantOffset, cursorPos.y + height, whiteColor);
+		drawList.addQuadFilled(cursorPos.x, cursorPos.y, cursorPos.x + baseWidth + expansion, cursorPos.y, cursorPos.x + baseWidth + expansion + slantOffset, cursorPos.y + height, cursorPos.x, cursorPos.y + height, mainColor);
+
+		ImVec2 textSize = ImGui.calcTextSize(label);
+		float textX = cursorPos.x + 10f;
+		float textY = cursorPos.y + (height - textSize.y) * 0.5f;
+
+		int textColor = colorFromImVec4(ImGui.getStyle().getColor(ImGuiCol.Text));
+
+		drawList.addText(textX, textY, textColor, label);
+
+		return ImGui.isItemClicked();
+	}
+
+	private int colorFromImVec4(ImVec4 vec) {
+		int r = (int) (vec.x * 255.0f) & 0xFF;
+		int g = (int) (vec.y * 255.0f) & 0xFF;
+		int b = (int) (vec.z * 255.0f) & 0xFF;
+		int a = (int) (vec.w * 255.0f) & 0xFF;
+
+		return (a << 24) | (b << 16) | (g << 8) | r;
 	}
 
 	@Override
