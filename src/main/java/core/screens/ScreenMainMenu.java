@@ -55,19 +55,19 @@ public class ScreenMainMenu extends Screen {
 		ImGui.popFont();
 		ImGui.spacing();
 
-		if (customSlantedButton("Play")) {
+		if (customSlantedButton("Play", 250F)) {
 			core.setScreen(new ScreenGame(core));
 		}
 		ImGui.spacing();
-		if (customSlantedButton("Load Game")) {
+		if (customSlantedButton("Load Game", 225F)) {
 			core.setScreen(new ScreenLoadGame(core));
 		}
 		ImGui.spacing();
-		if (customSlantedButton("Settings")) {
+		if (customSlantedButton("Settings", 200F)) {
 			core.setScreen(new ScreenSettings(core));
 		}
 		ImGui.spacing();
-		if (customSlantedButton("Exit")) {
+		if (customSlantedButton("Exit", 175F)) {
 			System.exit(0);
 		}
 
@@ -75,8 +75,8 @@ public class ScreenMainMenu extends Screen {
 		ImGui.end();
 	}
 
-	private boolean customSlantedButton(String label) {
-		float baseWidth = 200f;
+	private boolean customSlantedButton(String label, float width) {
+		float baseWidth = width;
 		float height = 25f;
 		float slantOffset = 20f;
 		float extension = 4f;
@@ -102,7 +102,7 @@ public class ScreenMainMenu extends Screen {
 		}
 
 		if (hovered) {
-			buttonWidthOffsets.put(label, 100f);
+			buttonWidthOffsets.put(label, 50F);
 		} else {
 			buttonWidthOffsets.put(label, 0f);
 		}
@@ -111,8 +111,27 @@ public class ScreenMainMenu extends Screen {
 
 		int whiteColor = 0xFFFFFFFF;
 
-		drawList.addQuadFilled(cursorPos.x + baseWidth + expansion, cursorPos.y, cursorPos.x + baseWidth + expansion + extension, cursorPos.y, cursorPos.x + baseWidth + expansion + slantOffset + extension, cursorPos.y + height, cursorPos.x + baseWidth + expansion + slantOffset, cursorPos.y + height, whiteColor);
-		drawList.addQuadFilled(cursorPos.x, cursorPos.y, cursorPos.x + baseWidth + expansion, cursorPos.y, cursorPos.x + baseWidth + expansion + slantOffset, cursorPos.y + height, cursorPos.x, cursorPos.y + height, mainColor);
+		drawList.addQuadFilled(
+				cursorPos.x + baseWidth + expansion + slantOffset,
+				cursorPos.y,
+				cursorPos.x + baseWidth + expansion + slantOffset + extension,
+				cursorPos.y,
+				cursorPos.x + baseWidth + expansion + extension,
+				cursorPos.y + height,
+				cursorPos.x + baseWidth + expansion,
+				cursorPos.y + height, whiteColor
+		);
+		drawList.addQuadFilled(
+				cursorPos.x,
+				cursorPos.y,
+				cursorPos.x + baseWidth + expansion + slantOffset,
+				cursorPos.y,
+				cursorPos.x + baseWidth + expansion,
+				cursorPos.y + height,
+				cursorPos.x,
+				cursorPos.y + height,
+				mainColor
+		);
 
 		ImVec2 textSize = ImGui.calcTextSize(label);
 		float textX = cursorPos.x + 10f;
