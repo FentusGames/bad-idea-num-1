@@ -7,6 +7,7 @@ import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Result;
 import org.jooq.impl.DSL;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import core.Core;
@@ -96,5 +97,8 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void key(long window, int key, int scancode, int action, int mods) {
+		if (GLFW.GLFW_KEY_ESCAPE == key) {
+			core.setScreen(new ScreenSettings(core));
+		}
 	}
 }
