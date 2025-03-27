@@ -98,7 +98,7 @@ public class ScreenGame extends Screen {
 	@Override
 	public void key(long window, int key, int scancode, int action, int mods) {
 		if (GLFW.GLFW_KEY_ESCAPE == key) {
-			core.setScreen(new ScreenSettings(core));
+			core.setScreen(new ScreenPause(core));
 		}
 	}
 }

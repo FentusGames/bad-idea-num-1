@@ -12,11 +12,11 @@ import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 
-public class ScreenSettings extends Screen {
+public class ScreenPause extends Screen {
 	
 	private final Map<String, Float> buttonWidthOffsets = new HashMap<>();
 
-	public ScreenSettings(Core core) {
+	public ScreenPause(Core core) {
 		super(core);
 	}
 
@@ -54,13 +54,22 @@ public class ScreenSettings extends Screen {
 		ImGui.spacing();
 
 		//FIXME: This doesn't resume, it just starts the game over
-		if (customSlantedButton("Rick", 250F)) {}
+		if (customSlantedButton("Resume", 250F)) {
+			core.setScreen(new ScreenGame(core));
+		}
 		
 		ImGui.spacing();
-		if (customSlantedButton("Was", 225F)) {}
+		if (customSlantedButton("Save Game", 225F)) {
+			//TODO: implement saving
+		}
+		
+		ImGui.spacing();
+		if (customSlantedButton("Settings", 200F)) {
+			core.setScreen(new ScreenSettings(core));
+		}
 
 		ImGui.spacing();
-		if (customSlantedButton("Here", 200F)) {
+		if (customSlantedButton("Exit", 175F)) {
 			System.exit(0);
 		}
 
