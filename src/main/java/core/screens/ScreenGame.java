@@ -84,6 +84,8 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void scroll(long window, double xoffset, double yoffset) {
+		this.camera.getPosition().x += xoffset*SCROLL_FACTOR;
+		this.camera.getPosition().y -= yoffset*SCROLL_FACTOR;
 	}
 
 	@Override
