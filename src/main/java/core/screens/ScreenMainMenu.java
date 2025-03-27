@@ -111,6 +111,7 @@ public class ScreenMainMenu extends Screen {
 
 		int whiteColor = 0xFFFFFFFF;
 
+		// @formatter:off
 		drawList.addQuadFilled(
 				cursorPos.x + baseWidth + expansion + slantOffset,
 				cursorPos.y,
@@ -132,6 +133,7 @@ public class ScreenMainMenu extends Screen {
 				cursorPos.y + height,
 				mainColor
 		);
+		// @formatter:on
 
 		ImVec2 textSize = ImGui.calcTextSize(label);
 		float textX = cursorPos.x + 10f;
