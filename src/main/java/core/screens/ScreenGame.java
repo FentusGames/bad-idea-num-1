@@ -23,6 +23,8 @@ public class ScreenGame extends Screen {
 
 	private Ship ship = new Ship(core);
 
+  private static final int SCROLL_FACTOR = 10;
+
 	public ScreenGame(Core core) {
 		super(core);
 	}
