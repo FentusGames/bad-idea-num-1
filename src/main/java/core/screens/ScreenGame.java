@@ -28,20 +28,24 @@ public class ScreenGame extends Screen {
 			ImGui.text("Welcome to the main screen!");
 		});
 
-		slider.addScreen(1, 0, "Minigame A", ctx -> {
-			ImGui.text("This is Minigame A");
+		slider.addScreen(0, 1, "Customer", ctx -> {
+			ImGui.text("This is the customer view!");
 		});
 
-		slider.addScreen(-1, 0, "Minigame B", ctx -> {
-			ImGui.text("This is Minigame B");
+		slider.addScreen(0, 2, "Customer Info", ctx -> {
+			ImGui.text("This is the customer info view!");
 		});
 
-		slider.addScreen(0, 1, "Minigame C", ctx -> {
-			ImGui.text("This is Minigame C");
+		slider.addScreen(1, 0, "Lab", ctx -> {
+			ImGui.text("This is the lab view!");
 		});
 
-		slider.addScreen(0, -1, "Minigame D", ctx -> {
-			ImGui.text("This is Minigame D");
+		slider.addScreen(-1, 0, "Societal Impact", ctx -> {
+			ImGui.text("This is the societal impact view!");
+		});
+
+		slider.addScreen(0, -1, "Finance", ctx -> {
+			ImGui.text("This is the finance view!");
 		});
 	}
 

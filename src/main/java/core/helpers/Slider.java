@@ -16,7 +16,7 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 
 public class Slider implements Updateable, Imguiable {
-	private static final float MOVE_SPEED = 50;
+	private static final float MOVE_SPEED = 20;
 
 	private Core core;
 
@@ -119,8 +119,8 @@ public class Slider implements Updateable, Imguiable {
 			Texture current = ImGui.isMouseHoveringRect(ImGui.getCursorScreenPosX(), ImGui.getCursorScreenPosY(), ImGui.getCursorScreenPosX() + normal.getWidth(), ImGui.getCursorScreenPosY() + normal.getHeight()) ? hover : normal;
 
 			if (ImGui.imageButton(current.getID(), current.getWidth(), current.getHeight(), 0, 0, 1, 1, 0)) {
-				targetOffsetX -= btn.dx * windowWidth; // X is inverted
-				targetOffsetY -= btn.dy * windowHeight; // Y is inverted
+				targetOffsetX += btn.dx * windowWidth;
+				targetOffsetY += btn.dy * windowHeight;
 				coordX += btn.dx;
 				coordY += btn.dy;
 			}
