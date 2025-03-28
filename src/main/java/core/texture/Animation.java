@@ -144,4 +144,8 @@ public class Animation implements Renderable {
 	public void setA(float a) {
 		this.a = a;
 	}
+	
+	public List<Texture> getFrames() {
+		return frames;
+	}
 }

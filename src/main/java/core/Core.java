@@ -27,6 +27,7 @@ import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
 import core.texture.Animation;
+import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -96,6 +97,7 @@ public class Core {
 		glslVersion = "#version 130";
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+		glfwWindowHint(GLFW_RESIZABLE, 0);
 
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		windowPtr = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -147,7 +149,7 @@ public class Core {
 		ImGui.getStyle().setPopupBorderSize(0.0f);
 
 		// Rounding
-		float rounding = 3F;
+		float rounding = 0F;
 
 		ImGui.getStyle().setWindowRounding(rounding);
 		ImGui.getStyle().setChildRounding(rounding);
@@ -412,6 +414,10 @@ public class Core {
 		return textures.getAnimation(key);
 	}
 
+	public Texture getTexture(String key, int frame) {
+		return textures.getAnimation(key).getFrames().get(frame);
+	}
+	
 	public ImFont getFont(String name, int size) {
 		return fonts.getFont(name, size);
 	}
