@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import core.Core;
 import core.interfaces.Imguiable;
@@ -15,6 +16,8 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 
 public class Slider implements Updateable, Imguiable {
+	private static final float MOVE_SPEED = 50;
+
 	private Core core;
 
 	private float offsetX = 0, offsetY = 0;
@@ -25,37 +28,46 @@ public class Slider implements Updateable, Imguiable {
 
 	private final Set<Point> allowedCoords = new HashSet<>();
 	private final Map<Point, String> screenNames = new HashMap<>();
+	private final Map<Point, Consumer<SliderRenderContext>> screenRenderers = new HashMap<>();
 
 	public Slider(Core core) {
 		this.core = core;
-
-		// Define accessible screens and names
-		allowedCoords.add(new Point(0, 0));
-		screenNames.put(new Point(0, 0), "Main");
-
-		allowedCoords.add(new Point(0, 1));
-		screenNames.put(new Point(0, 1), "Minigame 1");
-
-		allowedCoords.add(new Point(0, -1));
-		screenNames.put(new Point(0, -1), "Minigame 2");
-
-		allowedCoords.add(new Point(1, 0));
-		screenNames.put(new Point(1, 0), "Minigame 3");
-
-		allowedCoords.add(new Point(-1, 0));
-		screenNames.put(new Point(-1, 0), "Minigame 4");
 	}
 
 	@Override
 	public void update(float delta) {
-		float moveSpeed = 80F;
-		offsetX = approach(offsetX, targetOffsetX, moveSpeed * delta);
-		offsetY = approach(offsetY, targetOffsetY, moveSpeed * delta);
+		offsetX = approach(offsetX, targetOffsetX, MOVE_SPEED * delta);
+		offsetY = approach(offsetY, targetOffsetY, MOVE_SPEED * delta);
 	}
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 		renderNavigationButtons(windowWidth, windowHeight);
+
+		int contentWidth = windowWidth - 100;
+		int contentHeight = windowHeight - 100;
+		int contentOffset = 100 / 2;
+
+		for (Map.Entry<Point, String> entry : screenNames.entrySet()) {
+			Point coord = entry.getKey();
+			String label = entry.getValue();
+
+			int x = coord.x * windowWidth + contentOffset;
+			int y = -coord.y * windowHeight + contentOffset;
+
+			setNextWindowSlideable(x, y);
+			ImGui.setNextWindowSize(contentWidth, contentHeight);
+			ImGui.begin(label, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+
+			var renderer = screenRenderers.get(coord);
+			if (renderer != null) {
+				renderer.accept(new SliderRenderContext(delta, windowX, windowY, windowWidth, windowHeight));
+			} else {
+				ImGui.text("No renderer attached for: " + label);
+			}
+
+			ImGui.end();
+		}
 	}
 
 	private float approach(float current, float target, float maxDelta) {
@@ -107,7 +119,7 @@ public class Slider implements Updateable, Imguiable {
 			Texture current = ImGui.isMouseHoveringRect(ImGui.getCursorScreenPosX(), ImGui.getCursorScreenPosY(), ImGui.getCursorScreenPosX() + normal.getWidth(), ImGui.getCursorScreenPosY() + normal.getHeight()) ? hover : normal;
 
 			if (ImGui.imageButton(current.getID(), current.getWidth(), current.getHeight(), 0, 0, 1, 1, 0)) {
-				targetOffsetX += btn.dx * windowWidth;
+				targetOffsetX -= btn.dx * windowWidth; // X is inverted
 				targetOffsetY -= btn.dy * windowHeight; // Y is inverted
 				coordX += btn.dx;
 				coordY += btn.dy;
@@ -115,16 +127,23 @@ public class Slider implements Updateable, Imguiable {
 			ImGui.end();
 		}
 	}
-	
+
 	public float getOffsetX() {
 		return offsetX;
 	}
-	
+
 	public float getOffsetY() {
 		return offsetY;
 	}
 
 	public void setNextWindowSlideable(int x, int y) {
 		ImGui.setNextWindowPos(offsetX + x, offsetY + y, ImGuiCond.Always);
+	}
+
+	public void addScreen(int x, int y, String label, Consumer<SliderRenderContext> renderer) {
+		Point p = new Point(x, y);
+		allowedCoords.add(p);
+		screenNames.put(p, label);
+		screenRenderers.put(p, renderer);
 	}
 }

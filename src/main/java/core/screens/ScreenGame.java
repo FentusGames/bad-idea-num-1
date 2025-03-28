@@ -7,7 +7,6 @@ import core.Core;
 import core.camera.Camera;
 import core.helpers.Slider;
 import imgui.ImGui;
-import imgui.flag.ImGuiWindowFlags;
 
 public class ScreenGame extends Screen {
 
@@ -24,6 +23,26 @@ public class ScreenGame extends Screen {
 	@Override
 	public void init() {
 		super.init();
+
+		slider.addScreen(0, 0, "Main", ctx -> {
+			ImGui.text("Welcome to the main screen!");
+		});
+
+		slider.addScreen(1, 0, "Minigame A", ctx -> {
+			ImGui.text("This is Minigame A");
+		});
+
+		slider.addScreen(-1, 0, "Minigame B", ctx -> {
+			ImGui.text("This is Minigame B");
+		});
+
+		slider.addScreen(0, 1, "Minigame C", ctx -> {
+			ImGui.text("This is Minigame C");
+		});
+
+		slider.addScreen(0, -1, "Minigame D", ctx -> {
+			ImGui.text("This is Minigame D");
+		});
 	}
 
 	@Override
@@ -43,13 +62,6 @@ public class ScreenGame extends Screen {
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 		slider.imgui(delta, windowX, windowY, windowWidth, windowHeight);
-
-		slider.setNextWindowSlideable(windowWidth / 2, windowHeight / 2);
-
-		ImGui.begin("Main Screen", ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
-		ImGui.text("Resolution: " + windowWidth + " x " + windowHeight);
-		ImGui.text(String.format("Offset: (%.1f, %.1f)", slider.getOffsetX(), slider.getOffsetY()));
-		ImGui.end();
 	}
 
 	@Override
