@@ -57,7 +57,7 @@ public class Slider implements Updateable, Imguiable {
 
 			setNextWindowSlideable(x, y);
 			ImGui.setNextWindowSize(contentWidth, contentHeight);
-			ImGui.begin(label, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove);
+			ImGui.begin(label, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar);
 
 			var renderer = screenRenderers.get(coord);
 			if (renderer != null) {
