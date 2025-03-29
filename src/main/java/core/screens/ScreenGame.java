@@ -17,8 +17,7 @@ public class ScreenGame extends Screen {
 	private final DSLContext db = core.getDB("game");
 
 	private Slider slider = new Slider(core);
-	private final Map<String, Float> buttonWidthOffsets = new HashMap<>();
-
+	
 	// Variables that need saved.
 	private int saveId;
 	private String saveName;
@@ -37,7 +36,7 @@ public class ScreenGame extends Screen {
 		slider.addScreen(0, 0, "Main", ctx -> {
 			ImGui.text("This is the main view!");
 			HImGui.renderDays(ctx);
-			HImGui.renderNextDay(ctx, buttonWidthOffsets);
+			HImGui.renderNextDay(ctx);
 			HImGui.renderMoney(ctx);
 		});
 

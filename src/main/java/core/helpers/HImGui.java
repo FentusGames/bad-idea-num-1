@@ -26,19 +26,20 @@ public class HImGui {
 		ImGui.popFont();
 	}
 
-	public static void renderNextDay(SliderRenderContext ctx, Map<String, Float> buttonWidthOffsets) {
+	public static void renderNextDay(SliderRenderContext ctx) {
 		ScreenGame screen = ((ScreenGame) ctx.core.getScreen());
 
-		float windowWidth = ImGui.getWindowWidth();
-		float buttonWidth = ImGui.calcTextSize("Next Day").x + 90;
 		float buttonHeight = 40;
+		float windowWidth = ImGui.getWindowWidth();
 		float windowHeight = ImGui.getWindowHeight();
 
-		ImGui.setCursorPosX(windowWidth - buttonWidth - 90);
 		ImGui.setCursorPosY(windowHeight - buttonHeight - 10);
-
 		ImGui.pushFont(ctx.core.getFont("default", 20));
-		if (customSlantedButton("Next Day", buttonWidth, buttonWidthOffsets)) {
+
+		float buttonWidth = ImGui.calcTextSize("Next Day").x + 10;
+		ImGui.setCursorPosX(windowWidth - buttonWidth - 10);
+
+		if (ImGui.button("Next Day", buttonWidth, buttonHeight)) {
 			screen.setDaysPassed(screen.getDaysPassed() + 1);
 		}
 		ImGui.popFont();
