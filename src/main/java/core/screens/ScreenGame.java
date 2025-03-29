@@ -9,7 +9,6 @@ import core.helpers.Slider;
 import imgui.ImGui;
 
 public class ScreenGame extends Screen {
-
 	private final Camera camera;
 	private final DSLContext db = core.getDB("game");
 
