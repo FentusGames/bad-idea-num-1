@@ -15,8 +15,6 @@ public class HImGui {
 
 		float windowWidth = ImGui.getWindowWidth();
 
-		System.out.println(windowWidth);
-
 		String dayLabel = "Day: " + screen.getDaysPassed();
 
 		ImGui.pushFont(ctx.core.getFont("default", 44));
