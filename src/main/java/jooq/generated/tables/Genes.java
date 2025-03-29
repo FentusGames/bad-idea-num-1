@@ -69,9 +69,9 @@ public class Genes extends TableImpl<GenesRecord> {
     public final TableField<GenesRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>genes.diseases</code>.
+     * The column <code>genes.disease</code>.
      */
-    public final TableField<GenesRecord, String> DISEASES = createField(DSL.name("diseases"), SQLDataType.CLOB, this, "");
+    public final TableField<GenesRecord, String> DISEASE = createField(DSL.name("disease"), SQLDataType.CLOB, this, "");
 
     private Genes(Name alias, Table<GenesRecord> aliased) {
         this(alias, aliased, null);

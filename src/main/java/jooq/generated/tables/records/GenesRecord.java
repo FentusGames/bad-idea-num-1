@@ -78,16 +78,16 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
     }
 
     /**
-     * Setter for <code>genes.diseases</code>.
+     * Setter for <code>genes.disease</code>.
      */
-    public void setDiseases(String value) {
+    public void setDisease(String value) {
         set(4, value);
     }
 
     /**
-     * Getter for <code>genes.diseases</code>.
+     * Getter for <code>genes.disease</code>.
      */
-    public String getDiseases() {
+    public String getDisease() {
         return (String) get(4);
     }
 
@@ -136,7 +136,7 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
 
     @Override
     public Field<String> field5() {
-        return Genes.GENES.DISEASES;
+        return Genes.GENES.DISEASE;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
 
     @Override
     public String component5() {
-        return getDiseases();
+        return getDisease();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
 
     @Override
     public String value5() {
-        return getDiseases();
+        return getDisease();
     }
 
     @Override
@@ -215,7 +215,7 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
 
     @Override
     public GenesRecord value5(String value) {
-        setDiseases(value);
+        setDisease(value);
         return this;
     }
 
@@ -243,13 +243,13 @@ public class GenesRecord extends UpdatableRecordImpl<GenesRecord> implements Rec
     /**
      * Create a detached, initialised GenesRecord
      */
-    public GenesRecord(Integer id, String geneId, String encodedsymbol, String description, String diseases) {
+    public GenesRecord(Integer id, String geneId, String encodedsymbol, String description, String disease) {
         super(Genes.GENES);
 
         setId(id);
         setGeneId(geneId);
         setEncodedsymbol(encodedsymbol);
         setDescription(description);
-        setDiseases(diseases);
+        setDisease(disease);
     }
 }
