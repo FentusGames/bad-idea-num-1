@@ -15,12 +15,15 @@ public class HImGui {
 
 		float windowWidth = ImGui.getWindowWidth();
 
+		System.out.println(windowWidth);
+
 		String dayLabel = "Day: " + screen.getDaysPassed();
+
+		ImGui.pushFont(ctx.core.getFont("default", 44));
 
 		float textWidth = ImGui.calcTextSize(dayLabel).x;
 
-		ImGui.pushFont(ctx.core.getFont("default", 44));
-		ImGui.setCursorPosX((windowWidth - textWidth) * 0.5f);
+		ImGui.setCursorPosX((windowWidth - textWidth) / 2);
 		ImGui.text(dayLabel);
 		ImGui.popFont();
 	}
