@@ -84,7 +84,14 @@ public class ImGuiSlider implements Updateable, Imguiable {
 		float margin = 10f;
 		int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize;
 
-		DirButton[] buttons = new DirButton[] { new DirButton("Up", 0, 1, windowWidth * 0.5f, margin, 0.5f, 0.0f, "up"), new DirButton("Down", 0, -1, windowWidth * 0.5f, windowHeight - margin, 0.5f, 1.0f, "down"), new DirButton("Left", 1, 0, margin, windowHeight * 0.5f, 0.0f, 0.5f, "left"), new DirButton("Right", -1, 0, windowWidth - margin, windowHeight * 0.5f, 1.0f, 0.5f, "right"), };
+		// @formatter:off
+		DirButton[] buttons = new DirButton[] { 
+			new DirButton("Up", 0, 1, windowWidth * 0.5f, margin, 0.5f, 0.0f, "up"), 
+			new DirButton("Down", 0, -1, windowWidth * 0.5f, windowHeight - margin, 0.5f, 1.0f, "down"), 
+			new DirButton("Left", 1, 0, margin, windowHeight * 0.5f, 0.0f, 0.5f, "left"), 
+			new DirButton("Right", -1, 0, windowWidth - margin, windowHeight * 0.5f, 1.0f, 0.5f, "right")
+		};
+		// @formatter:on
 
 		for (DirButton btn : buttons) {
 			int nextX = coordX + btn.getDx();
@@ -98,7 +105,15 @@ public class ImGuiSlider implements Updateable, Imguiable {
 			ImGui.begin(btn.getLabel() + " Button", flags);
 			Texture normal = core.getTexture("graphics_buttons_" + btn.getTextureBase(), 0);
 			Texture hover = core.getTexture("graphics_buttons_" + btn.getTextureBase() + "_hover", 0);
-			Texture current = ImGui.isMouseHoveringRect(ImGui.getCursorScreenPosX(), ImGui.getCursorScreenPosY(), ImGui.getCursorScreenPosX() + normal.getWidth(), ImGui.getCursorScreenPosY() + normal.getHeight()) ? hover : normal;
+
+			// @formatter:off
+			Texture current = ImGui.isMouseHoveringRect(
+				ImGui.getCursorScreenPosX(), 
+				ImGui.getCursorScreenPosY(), 
+				ImGui.getCursorScreenPosX() + normal.getWidth(), 
+				ImGui.getCursorScreenPosY() + normal.getHeight()
+			) ? hover : normal;
+			// @formatter:on
 
 			if (ImGui.imageButton(current.getID(), current.getWidth(), current.getHeight(), 0, 0, 1, 1, 0)) {
 				targetOffsetX += btn.getDx() * windowWidth;
