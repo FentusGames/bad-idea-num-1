@@ -1,8 +1,5 @@
 package core.screens;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jooq.DSLContext;
 import org.lwjgl.opengl.GL11;
 
@@ -17,7 +14,7 @@ public class ScreenGame extends Screen {
 	private final DSLContext db = core.getDB("game");
 
 	private Slider slider = new Slider(core);
-	
+
 	// Variables that need saved.
 	private int saveId;
 	private String saveName;
