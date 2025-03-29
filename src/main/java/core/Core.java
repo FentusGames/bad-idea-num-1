@@ -97,7 +97,7 @@ public class Core {
 		glslVersion = "#version 130";
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-		glfwWindowHint(GLFW_RESIZABLE, 0);
+		// TODO: Disable resizing glfwWindowHint(GLFW_RESIZABLE, 0);
 
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 		windowPtr = glfwCreateWindow(width, height, title, NULL, NULL);
