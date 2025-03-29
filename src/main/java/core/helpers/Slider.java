@@ -114,8 +114,8 @@ public class Slider implements Updateable, Imguiable {
 
 			ImGui.setNextWindowPos(btn.x, btn.y, ImGuiCond.Always, btn.alignX, btn.alignY);
 			ImGui.begin(btn.label + " Button", flags);
-			Texture normal = core.getTexture("graphics_" + btn.textureBase, 0);
-			Texture hover = core.getTexture("graphics_" + btn.textureBase + "_hover", 0);
+			Texture normal = core.getTexture("graphics_buttons_" + btn.textureBase, 0);
+			Texture hover = core.getTexture("graphics_buttons_" + btn.textureBase + "_hover", 0);
 			Texture current = ImGui.isMouseHoveringRect(ImGui.getCursorScreenPosX(), ImGui.getCursorScreenPosY(), ImGui.getCursorScreenPosX() + normal.getWidth(), ImGui.getCursorScreenPosY() + normal.getHeight()) ? hover : normal;
 
 			if (ImGui.imageButton(current.getID(), current.getWidth(), current.getHeight(), 0, 0, 1, 1, 0)) {
