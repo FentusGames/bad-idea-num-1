@@ -133,4 +133,8 @@ public class ScreenGame extends Screen {
 	public ImGuiSlider getImGuiSlider() {
 		return imGuiSlider;
 	}
+	
+	public ImGuiLab getImGuiLab() {
+		return imGuiLab;
+	}
 }

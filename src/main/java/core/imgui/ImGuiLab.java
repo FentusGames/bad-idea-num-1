@@ -18,6 +18,10 @@ public class ImGuiLab implements Initable, ImguiableCTX {
 
 	@Override
 	public void init() {
+		reset();
+	}
+
+	public void reset() {
 		Random random = new Random();
 		char[] options = { 'A', 'T', 'C', 'G' };
 

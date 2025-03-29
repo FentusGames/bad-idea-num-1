@@ -10,7 +10,9 @@ public class ImGuiNextDay implements ImguiableCTX {
 	@Override
 	public void imgui(SliderRenderContext ctx) {
 		Core core = ctx.getCore();
-		ImGuiDays days = ((ScreenGame) core.getScreen()).getImGuiDays();
+		ScreenGame screen = ((ScreenGame) core.getScreen());
+		ImGuiDays days = screen.getImGuiDays();
+		ImGuiLab lab = screen.getImGuiLab();
 
 		float buttonHeight = 40;
 		float windowWidth = ImGui.getWindowWidth();
@@ -24,6 +26,7 @@ public class ImGuiNextDay implements ImguiableCTX {
 
 		if (ImGui.button("Next Day", buttonWidth, buttonHeight)) {
 			days.setDaysPassed(days.getDaysPassed() + 1);
+			lab.reset();
 		}
 		ImGui.popFont();
 	}
