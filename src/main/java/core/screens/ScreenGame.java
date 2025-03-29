@@ -1,19 +1,16 @@
 package core.screens;
 
-import java.util.Random;
-
 import org.jooq.DSLContext;
 import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
 import core.imgui.ImGuiDays;
+import core.imgui.ImGuiLab;
 import core.imgui.ImGuiMoney;
 import core.imgui.ImGuiNextDay;
 import core.imgui.ImGuiSlider;
 import imgui.ImGui;
-import imgui.flag.ImGuiCol;
-import imgui.type.ImInt;
 
 public class ScreenGame extends Screen {
 	private final Camera camera;
@@ -23,13 +20,7 @@ public class ScreenGame extends Screen {
 	private ImGuiDays imGuiDays = new ImGuiDays();
 	private ImGuiMoney imGuiMoney = new ImGuiMoney();
 	private ImGuiNextDay imGuiNextDay = new ImGuiNextDay();
-
-	// Lab state
-	private static final int ROW_SIZE = 100;
-	private static final int VISIBLE_AT_ONCE = 10;
-	private final char[] topRow = new char[ROW_SIZE];
-	private final char[] bottomRow = new char[ROW_SIZE];
-	private final ImInt labPage = new ImInt(0); // Current lab view page
+	private ImGuiLab imGuiLab = new ImGuiLab();
 
 	// Variables that need saved.
 	private int saveId;
@@ -44,7 +35,7 @@ public class ScreenGame extends Screen {
 	public void init() {
 		super.init();
 
-		initializeLabNucleotides();
+		imGuiLab.init();
 
 		imGuiSlider.addScreen(0, 0, "Main", ctx -> {
 			ImGui.text("This is the main view!");
@@ -63,7 +54,7 @@ public class ScreenGame extends Screen {
 
 		imGuiSlider.addScreen(1, 0, "Lab", ctx -> {
 			ImGui.text("This is the lab view!");
-			renderLabView();
+			imGuiLab.imgui(ctx);
 		});
 
 		imGuiSlider.addScreen(-1, 0, "Societal Impact", ctx -> {
@@ -74,92 +65,6 @@ public class ScreenGame extends Screen {
 			ImGui.text("This is the finance view!");
 			imGuiMoney.imgui(ctx);
 		});
-	}
-
-	private void initializeLabNucleotides() {
-		Random random = new Random();
-		char[] options = { 'A', 'T', 'C', 'G' };
-
-		for (int i = 0; i < ROW_SIZE; i++) {
-			topRow[i] = options[random.nextInt(options.length)];
-
-			char bottom;
-			do {
-				bottom = options[random.nextInt(options.length)];
-			} while (bottom == topRow[i]);
-
-			bottomRow[i] = bottom;
-		}
-	}
-
-	private void renderLabView() {
-		ImGui.text("Nucleotide Display - Page " + (labPage.get() + 1));
-
-		int startIdx = labPage.get() * VISIBLE_AT_ONCE;
-		int endIdx = Math.min(startIdx + VISIBLE_AT_ONCE, ROW_SIZE);
-
-		float totalWidth = VISIBLE_AT_ONCE * 24f; // 20px + 4px spacing
-		float centerX = (ImGui.getWindowWidth() - totalWidth) / 2;
-
-		// Top row
-		ImGui.setCursorPosX(centerX);
-		for (int i = startIdx; i < endIdx; i++) {
-			char base = topRow[i];
-			setColorForBase(base);
-			ImGui.pushID(i);
-			if (ImGui.button(String.valueOf(base), 30, 75)) {
-				System.out.println("Clicked TOP: " + base + " at index " + i);
-			}
-			ImGui.popID();
-			ImGui.popStyleColor();
-			ImGui.sameLine();
-		}
-		ImGui.newLine();
-
-		// Bottom row
-		ImGui.setCursorPosX(centerX);
-		for (int i = startIdx; i < endIdx; i++) {
-			char base = bottomRow[i];
-			setColorForBase(base);
-			ImGui.pushID(i + ROW_SIZE);
-			if (ImGui.button(String.valueOf(base), 30, 75)) {
-				System.out.println("Clicked BOTTOM: " + base + " at index " + i);
-			}
-			ImGui.popID();
-			ImGui.popStyleColor();
-			ImGui.sameLine();
-		}
-		ImGui.newLine();
-
-		// Pagination
-		ImGui.spacing();
-		if (ImGui.button("Prev") && labPage.get() > 0) {
-			labPage.set(labPage.get() - 1);
-		}
-		ImGui.sameLine();
-		if (ImGui.button("Next") && (labPage.get() + 1) * VISIBLE_AT_ONCE < ROW_SIZE) {
-			labPage.set(labPage.get() + 1);
-		}
-		ImGui.text("Showing " + VISIBLE_AT_ONCE + " per row. Total pages: " + (ROW_SIZE / VISIBLE_AT_ONCE));
-	}
-
-	private void setColorForBase(char base) {
-		switch (base) {
-		case 'A':
-			ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 0.5f, 1.0f, 0.7f);
-			break;
-		case 'T':
-			ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 1.0f, 0.2f, 0.7f);
-			break;
-		case 'G':
-			ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 1.0f, 0.0f, 0.7f);
-			break;
-		case 'C':
-			ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 0.0f, 0.2f, 0.7f);
-			break;
-		default:
-			ImGui.pushStyleColor(ImGuiCol.Button, 0.8f, 0.8f, 0.8f, 0.7f);
-		}
 	}
 
 	@Override

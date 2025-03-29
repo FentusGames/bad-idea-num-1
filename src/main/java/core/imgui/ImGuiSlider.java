@@ -95,7 +95,7 @@ public class ImGuiSlider implements Updateable, Imguiable {
 		for (DirButton btn : buttons) {
 			int nextX = coordX + btn.getDx();
 			int nextY = coordY + btn.getDy();
-			Point nextCoord = new Point(nextX, nextY);
+			Point nextCoord = new Point(-nextX, nextY);
 
 			if (!allowedCoords.contains(nextCoord)) {
 				continue; // hide button if not accessible
