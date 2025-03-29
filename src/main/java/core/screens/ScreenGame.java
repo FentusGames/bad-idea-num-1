@@ -13,6 +13,7 @@ public class ScreenGame extends Screen {
 	private final DSLContext db = core.getDB("game");
 
 	private Slider slider = new Slider(core);
+	private int daysPassed = 0;
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -24,7 +25,28 @@ public class ScreenGame extends Screen {
 		super.init();
 
 		slider.addScreen(0, 0, "Main", ctx -> {
-			ImGui.text("Welcome to the main screen!");
+			// Day
+			ImGui.pushFont(core.getFont("default", 44));
+			float windowWidth = ImGui.getWindowWidth();
+			String dayLabel = "Day: " + daysPassed;
+			float textWidth = ImGui.calcTextSize(dayLabel).x;
+			ImGui.setCursorPosX((windowWidth - textWidth) * 0.5f);
+			ImGui.text(dayLabel);
+			ImGui.popFont();
+
+			// Next Day
+			ImGui.pushFont(core.getFont("default", 26));
+			float buttonWidth = ImGui.calcTextSize("Next Day").x + 20;
+			float buttonHeight = 40;
+			float windowHeight = ImGui.getWindowHeight();
+			ImGui.setCursorPosX(windowWidth - buttonWidth - 10);
+			ImGui.setCursorPosY(windowHeight - buttonHeight - 10);
+
+			if (ImGui.button("Next Day", buttonWidth, buttonHeight)) {
+				daysPassed++;
+			}
+
+			ImGui.popFont();
 		});
 
 		slider.addScreen(0, 1, "Customer", ctx -> {
