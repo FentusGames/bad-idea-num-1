@@ -82,7 +82,6 @@ public class ImGuiSlider implements Updateable, Imguiable {
 
 	private void renderNavigationButtons(int windowWidth, int windowHeight) {
 		float margin = 10f;
-		int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize;
 
 		// @formatter:off
 		DirButton[] buttons = new DirButton[] { 
@@ -102,7 +101,7 @@ public class ImGuiSlider implements Updateable, Imguiable {
 			}
 
 			ImGui.setNextWindowPos(btn.getX(), btn.getY(), ImGuiCond.Always, btn.getAlignX(), btn.getAlignY());
-			ImGui.begin(btn.getLabel() + " Button", flags);
+			ImGui.begin(btn.getLabel() + " Button", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize);
 			Texture normal = core.getTexture("graphics_buttons_" + btn.getTextureBase(), 0);
 			Texture hover = core.getTexture("graphics_buttons_" + btn.getTextureBase() + "_hover", 0);
 
