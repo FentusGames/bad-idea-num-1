@@ -82,26 +82,6 @@ public class Slider implements Updateable, Imguiable {
 		float margin = 10f;
 		int flags = ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize;
 
-		// Direction button helper
-		class DirButton {
-			String label;
-			int dx, dy;
-			float x, y;
-			float alignX, alignY;
-			String textureBase;
-
-			DirButton(String label, int dx, int dy, float x, float y, float alignX, float alignY, String textureBase) {
-				this.label = label;
-				this.dx = dx;
-				this.dy = dy;
-				this.x = x;
-				this.y = y;
-				this.alignX = alignX;
-				this.alignY = alignY;
-				this.textureBase = textureBase;
-			}
-		}
-
 		DirButton[] buttons = new DirButton[] { new DirButton("Up", 0, 1, windowWidth * 0.5f, margin, 0.5f, 0.0f, "up"), new DirButton("Down", 0, -1, windowWidth * 0.5f, windowHeight - margin, 0.5f, 1.0f, "down"), new DirButton("Left", -1, 0, margin, windowHeight * 0.5f, 0.0f, 0.5f, "left"), new DirButton("Right", 1, 0, windowWidth - margin, windowHeight * 0.5f, 1.0f, 0.5f, "right"), };
 
 		for (DirButton btn : buttons) {
