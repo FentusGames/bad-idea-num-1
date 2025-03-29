@@ -5,10 +5,10 @@ import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
-import core.helpers.ImGuiDays;
-import core.helpers.ImGuiMoney;
-import core.helpers.ImGuiNextDay;
-import core.helpers.ImGuiSlider;
+import core.imgui.ImGuiDays;
+import core.imgui.ImGuiMoney;
+import core.imgui.ImGuiNextDay;
+import core.imgui.ImGuiSlider;
 import imgui.ImGui;
 
 public class ScreenGame extends Screen {

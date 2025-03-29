@@ -1,4 +1,4 @@
-package core.helpers;
+package core.imgui;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import core.Core;
+import core.helpers.DirButton;
+import core.helpers.SliderRenderContext;
 import core.interfaces.Imguiable;
 import core.interfaces.Updateable;
 import core.texture.Texture;
@@ -85,24 +87,24 @@ public class ImGuiSlider implements Updateable, Imguiable {
 		DirButton[] buttons = new DirButton[] { new DirButton("Up", 0, 1, windowWidth * 0.5f, margin, 0.5f, 0.0f, "up"), new DirButton("Down", 0, -1, windowWidth * 0.5f, windowHeight - margin, 0.5f, 1.0f, "down"), new DirButton("Left", -1, 0, margin, windowHeight * 0.5f, 0.0f, 0.5f, "left"), new DirButton("Right", 1, 0, windowWidth - margin, windowHeight * 0.5f, 1.0f, 0.5f, "right"), };
 
 		for (DirButton btn : buttons) {
-			int nextX = coordX + btn.dx;
-			int nextY = coordY + btn.dy;
+			int nextX = coordX + btn.getDx();
+			int nextY = coordY + btn.getDy();
 
 			if (!allowedCoords.contains(new Point(nextX, nextY))) {
 				continue; // hide button if not accessible
 			}
 
-			ImGui.setNextWindowPos(btn.x, btn.y, ImGuiCond.Always, btn.alignX, btn.alignY);
-			ImGui.begin(btn.label + " Button", flags);
-			Texture normal = core.getTexture("graphics_buttons_" + btn.textureBase, 0);
-			Texture hover = core.getTexture("graphics_buttons_" + btn.textureBase + "_hover", 0);
+			ImGui.setNextWindowPos(btn.getX(), btn.getY(), ImGuiCond.Always, btn.getAlignX(), btn.getAlignY());
+			ImGui.begin(btn.getLabel() + " Button", flags);
+			Texture normal = core.getTexture("graphics_buttons_" + btn.getTextureBase(), 0);
+			Texture hover = core.getTexture("graphics_buttons_" + btn.getTextureBase() + "_hover", 0);
 			Texture current = ImGui.isMouseHoveringRect(ImGui.getCursorScreenPosX(), ImGui.getCursorScreenPosY(), ImGui.getCursorScreenPosX() + normal.getWidth(), ImGui.getCursorScreenPosY() + normal.getHeight()) ? hover : normal;
 
 			if (ImGui.imageButton(current.getID(), current.getWidth(), current.getHeight(), 0, 0, 1, 1, 0)) {
-				targetOffsetX += btn.dx * windowWidth;
-				targetOffsetY += btn.dy * windowHeight;
-				coordX += btn.dx;
-				coordY += btn.dy;
+				targetOffsetX += btn.getDx() * windowWidth;
+				targetOffsetY += btn.getDy() * windowHeight;
+				coordX += btn.getDx();
+				coordY += btn.getDy();
 			}
 			ImGui.end();
 		}

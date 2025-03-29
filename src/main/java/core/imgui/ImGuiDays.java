@@ -1,6 +1,7 @@
-package core.helpers;
+package core.imgui;
 
 import core.Core;
+import core.helpers.SliderRenderContext;
 import core.interfaces.ImguiableCTX;
 import imgui.ImGui;
 
