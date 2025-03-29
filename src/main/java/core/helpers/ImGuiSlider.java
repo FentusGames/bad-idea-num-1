@@ -15,7 +15,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 
-public class Slider implements Updateable, Imguiable {
+public class ImGuiSlider implements Updateable, Imguiable {
 	private static final float MOVE_SPEED = 20;
 
 	private Core core;
@@ -30,7 +30,7 @@ public class Slider implements Updateable, Imguiable {
 	private final Map<Point, String> screenNames = new HashMap<>();
 	private final Map<Point, Consumer<SliderRenderContext>> screenRenderers = new HashMap<>();
 
-	public Slider(Core core) {
+	public ImGuiSlider(Core core) {
 		this.core = core;
 	}
 
