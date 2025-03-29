@@ -39,12 +39,16 @@ public class ImGuiLab implements Initable, ImguiableCTX {
 
 	@Override
 	public void imgui(SliderRenderContext ctx) {
+		float buttonWidth = 20F;
+		float buttonHeight = 75F;
+
 		ImGui.text("Nucleotide Display - Page " + (labPage.get() + 1));
+		ImGui.newLine();
 
 		int startIdx = labPage.get() * VISIBLE_AT_ONCE;
 		int endIdx = Math.min(startIdx + VISIBLE_AT_ONCE, ROW_SIZE);
 
-		float totalWidth = VISIBLE_AT_ONCE * 24f; // 20px + 4px spacing
+		float totalWidth = VISIBLE_AT_ONCE * (buttonWidth + 4F); // 20px + 4px spacing
 		float centerX = (ImGui.getWindowWidth() - totalWidth) / 2;
 
 		// Top row
@@ -53,7 +57,7 @@ public class ImGuiLab implements Initable, ImguiableCTX {
 			char base = topRow[i];
 			setColorForBase(base);
 			ImGui.pushID(i);
-			if (ImGui.button(String.valueOf(base), 30, 75)) {
+			if (ImGui.button(String.valueOf(base), buttonWidth, buttonHeight)) {
 				System.out.println("Clicked TOP: " + base + " at index " + i);
 			}
 			ImGui.popID();
@@ -68,7 +72,7 @@ public class ImGuiLab implements Initable, ImguiableCTX {
 			char base = bottomRow[i];
 			setColorForBase(base);
 			ImGui.pushID(i + ROW_SIZE);
-			if (ImGui.button(String.valueOf(base), 30, 75)) {
+			if (ImGui.button(String.valueOf(base), buttonWidth, buttonHeight)) {
 				System.out.println("Clicked BOTTOM: " + base + " at index " + i);
 			}
 			ImGui.popID();
