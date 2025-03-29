@@ -95,10 +95,13 @@ public class ImGuiSlider implements Updateable, Imguiable {
 		for (DirButton btn : buttons) {
 			int nextX = coordX + btn.getDx();
 			int nextY = coordY + btn.getDy();
+			Point nextCoord = new Point(nextX, nextY);
 
-			if (!allowedCoords.contains(new Point(nextX, nextY))) {
+			if (!allowedCoords.contains(nextCoord)) {
 				continue; // hide button if not accessible
 			}
+
+			String nextLabel = screenNames.getOrDefault(nextCoord, "Unknown");
 
 			ImGui.setNextWindowPos(btn.getX(), btn.getY(), ImGuiCond.Always, btn.getAlignX(), btn.getAlignY());
 			ImGui.begin(btn.getLabel() + " Button", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysAutoResize);
@@ -119,6 +122,12 @@ public class ImGuiSlider implements Updateable, Imguiable {
 				targetOffsetY += btn.getDy() * windowHeight;
 				coordX += btn.getDx();
 				coordY += btn.getDy();
+			}
+
+			if (ImGui.isItemHovered()) {
+				ImGui.beginTooltip();
+				ImGui.text(nextLabel);
+				ImGui.endTooltip();
 			}
 			ImGui.end();
 		}
