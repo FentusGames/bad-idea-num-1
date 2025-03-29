@@ -417,8 +417,12 @@ public class Core {
 	public Texture getTexture(String key, int frame) {
 		return textures.getAnimation(key).getFrames().get(frame);
 	}
-	
+
 	public ImFont getFont(String name, int size) {
 		return fonts.getFont(name, size);
+	}
+
+	public Screen getScreen() {
+		return screen;
 	}
 }

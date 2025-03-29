@@ -1,10 +1,14 @@
 package core.screens;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jooq.DSLContext;
 import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
+import core.helpers.HImGui;
 import core.helpers.Slider;
 import imgui.ImGui;
 
@@ -13,7 +17,13 @@ public class ScreenGame extends Screen {
 	private final DSLContext db = core.getDB("game");
 
 	private Slider slider = new Slider(core);
+	private final Map<String, Float> buttonWidthOffsets = new HashMap<>();
+
+	// Variables that need saved.
+	private int saveId;
+	private String saveName;
 	private int daysPassed = 0;
+	private float money = 2500.00F;
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -25,28 +35,10 @@ public class ScreenGame extends Screen {
 		super.init();
 
 		slider.addScreen(0, 0, "Main", ctx -> {
-			// Day
-			ImGui.pushFont(core.getFont("default", 44));
-			float windowWidth = ImGui.getWindowWidth();
-			String dayLabel = "Day: " + daysPassed;
-			float textWidth = ImGui.calcTextSize(dayLabel).x;
-			ImGui.setCursorPosX((windowWidth - textWidth) * 0.5f);
-			ImGui.text(dayLabel);
-			ImGui.popFont();
-
-			// Next Day
-			ImGui.pushFont(core.getFont("default", 26));
-			float buttonWidth = ImGui.calcTextSize("Next Day").x + 20;
-			float buttonHeight = 40;
-			float windowHeight = ImGui.getWindowHeight();
-			ImGui.setCursorPosX(windowWidth - buttonWidth - 10);
-			ImGui.setCursorPosY(windowHeight - buttonHeight - 10);
-
-			if (ImGui.button("Next Day", buttonWidth, buttonHeight)) {
-				daysPassed++;
-			}
-
-			ImGui.popFont();
+			ImGui.text("This is the main view!");
+			HImGui.renderDays(ctx);
+			HImGui.renderNextDay(ctx, buttonWidthOffsets);
+			HImGui.renderMoney(ctx);
 		});
 
 		slider.addScreen(0, 1, "Customer", ctx -> {
@@ -67,6 +59,7 @@ public class ScreenGame extends Screen {
 
 		slider.addScreen(0, -1, "Finance", ctx -> {
 			ImGui.text("This is the finance view!");
+			HImGui.renderMoney(ctx);
 		});
 	}
 
@@ -108,5 +101,37 @@ public class ScreenGame extends Screen {
 
 	public DSLContext getDb() {
 		return db;
+	}
+
+	public int getDaysPassed() {
+		return daysPassed;
+	}
+
+	public void setDaysPassed(int daysPassed) {
+		this.daysPassed = daysPassed;
+	}
+
+	public float getMoney() {
+		return money;
+	}
+
+	public void setMoney(float money) {
+		this.money = money;
+	}
+
+	public int getSaveId() {
+		return saveId;
+	}
+
+	public void setSaveId(int saveId) {
+		this.saveId = saveId;
+	}
+
+	public String getSaveName() {
+		return saveName;
+	}
+
+	public void setSaveName(String saveName) {
+		this.saveName = saveName;
 	}
 }

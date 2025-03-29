@@ -57,11 +57,11 @@ public class Slider implements Updateable, Imguiable {
 
 			setNextWindowSlideable(x, y);
 			ImGui.setNextWindowSize(contentWidth, contentHeight);
-			ImGui.begin(label, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar);
+			ImGui.begin(label, ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoTitleBar);
 
 			var renderer = screenRenderers.get(coord);
 			if (renderer != null) {
-				renderer.accept(new SliderRenderContext(delta, windowX, windowY, windowWidth, windowHeight));
+				renderer.accept(new SliderRenderContext(core, delta, windowX, windowY, windowWidth, windowHeight));
 			} else {
 				ImGui.text("No renderer attached for: " + label);
 			}
