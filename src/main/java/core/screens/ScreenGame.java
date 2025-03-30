@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import core.Core;
 import core.camera.Camera;
 import core.imgui.ImGuiDays;
-import core.imgui.ImGuiLab;
 import core.imgui.ImGuiMoney;
 import core.imgui.ImGuiNextDay;
 import core.imgui.ImGuiSlider;
@@ -20,7 +19,6 @@ public class ScreenGame extends Screen {
 	private ImGuiDays imGuiDays = new ImGuiDays();
 	private ImGuiMoney imGuiMoney = new ImGuiMoney();
 	private ImGuiNextDay imGuiNextDay = new ImGuiNextDay();
-	private ImGuiLab imGuiLab = new ImGuiLab();
 
 	// Variables that need saved.
 	private int saveId;
@@ -34,8 +32,6 @@ public class ScreenGame extends Screen {
 	@Override
 	public void init() {
 		super.init();
-
-		imGuiLab.init();
 
 		imGuiSlider.addScreen(0, 0, "Main", ctx -> {
 			ImGui.text("This is the main view!");
@@ -54,7 +50,6 @@ public class ScreenGame extends Screen {
 
 		imGuiSlider.addScreen(1, 0, "Lab", ctx -> {
 			ImGui.text("This is the lab view!");
-			imGuiLab.imgui(ctx);
 		});
 
 		imGuiSlider.addScreen(-1, 0, "Societal Impact", ctx -> {
@@ -132,9 +127,5 @@ public class ScreenGame extends Screen {
 
 	public ImGuiSlider getImGuiSlider() {
 		return imGuiSlider;
-	}
-	
-	public ImGuiLab getImGuiLab() {
-		return imGuiLab;
 	}
 }

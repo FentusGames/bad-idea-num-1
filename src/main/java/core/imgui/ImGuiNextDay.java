@@ -12,7 +12,6 @@ public class ImGuiNextDay implements ImguiableCTX {
 		Core core = ctx.getCore();
 		ScreenGame screen = ((ScreenGame) core.getScreen());
 		ImGuiDays days = screen.getImGuiDays();
-		ImGuiLab lab = screen.getImGuiLab();
 
 		float buttonHeight = 40;
 		float windowWidth = ImGui.getWindowWidth();
@@ -26,7 +25,6 @@ public class ImGuiNextDay implements ImguiableCTX {
 
 		if (ImGui.button("Next Day", buttonWidth, buttonHeight)) {
 			days.setDaysPassed(days.getDaysPassed() + 1);
-			lab.reset();
 		}
 		ImGui.popFont();
 	}
