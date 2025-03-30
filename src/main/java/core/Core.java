@@ -27,6 +27,7 @@ import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
 import core.texture.Animation;
+import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -413,11 +414,31 @@ public class Core {
 		return animations.getAnimation(key);
 	}
 
+	public Texture getTexture(String key, int index) {
+		return animations.getAnimation(key).getFrames().get(index);
+	}
+
 	public ImFont getFont(String name, int size) {
 		return fonts.getFont(name, size);
 	}
 
 	public Screen getScreen() {
 		return screen;
+	}
+
+	public int getWindowWidth() {
+		return windowWidth[0];
+	}
+
+	public int getWindowHeight() {
+		return windowHeight[0];
+	}
+
+	public int getWindowX() {
+		return windowX[0];
+	}
+
+	public int getWindowY() {
+		return windowY[0];
 	}
 }

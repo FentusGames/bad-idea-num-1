@@ -4,18 +4,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import core.interfaces.Disposable;
 import core.interfaces.Renderable;
 
 public class Texture implements Renderable, Disposable {
-	private static final Logger logger = LoggerFactory.getLogger(Texture.class);
-
 	private final int id;
-	private final int width;
-	private final int height;
+	private int width;
+	private int height;
 
 	private Vector3f pos = new Vector3f(0, 0, 0);
 	private Quaternionf rotation = new Quaternionf();
@@ -26,22 +22,11 @@ public class Texture implements Renderable, Disposable {
 		this.height = height;
 	}
 
-	public void bind() {
-		glBindTexture(GL_TEXTURE_2D, id);
-	}
-
-	public void unbind() {
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
 	@Override
 	public void render(float delta) {
-		if (id == 0) {
-			logger.warn("Attempted to render a null or invalid frame.");
-			return;
-		}
-
+		glBindTexture(GL_TEXTURE_2D, id);
 		drawQuad(this, pos, rotation);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	private void drawQuad(Texture texture, Vector3f position, Quaternionf rotation) {
@@ -77,7 +62,15 @@ public class Texture implements Renderable, Disposable {
 		return width;
 	}
 
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
 	public int getHeight() {
 		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

@@ -4,10 +4,12 @@ import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
+import core.texture.Texture;
 import imgui.ImGui;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
+	private final Texture background = core.getTexture("graphics_background", 0);
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -16,6 +18,9 @@ public class ScreenGame extends Screen {
 	@Override
 	public void init() {
 		super.init();
+
+		background.setWidth(core.getWindowWidth());
+		background.setHeight(core.getWindowHeight());
 	}
 
 	@Override
@@ -25,6 +30,8 @@ public class ScreenGame extends Screen {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		camera.apply();
+
+		background.render(delta);
 	}
 
 	@Override

@@ -21,10 +21,10 @@ public class Animation implements Renderable, Disposable {
 	private final List<Texture> frames;
 
 	private final Texture colorMask;
-	private float r = 1;
-	private float g = 1;
-	private float b = 1;
-	private float a = 1;
+	private float r = 1.0F;
+	private float g = 1.0F;
+	private float b = 1.0F;
+	private float a = 1.0F;
 
 	private int currentFrame;
 	private float frameTime;
@@ -54,16 +54,16 @@ public class Animation implements Renderable, Disposable {
 			return;
 		}
 
-		frame.bind();
+		glBindTexture(GL_TEXTURE_2D, frame.getID());
 		drawQuad(frame, pos, rotation);
-		frame.unbind();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		if (colorMask != null) {
-			colorMask.bind();
+			glBindTexture(GL_TEXTURE_2D, frame.getID());
 			glColor4f(getR(), getG(), getB(), getA());
 			drawQuad(frame, pos, rotation);
 			glColor4f(1, 1, 1, 1);
-			colorMask.unbind();
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 	}
 
