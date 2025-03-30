@@ -18,16 +18,15 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
+import core.assets.Animations;
 import core.assets.Fonts;
 import core.assets.Language;
 import core.assets.SQLite;
-import core.assets.Textures;
 import core.interfaces.KeyCallback;
 import core.interfaces.MouseButtonCallback;
 import core.interfaces.ScrollCallback;
 import core.screens.Screen;
 import core.texture.Animation;
-import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -66,7 +65,7 @@ public class Core {
 	private Fonts fonts;
 	private Language language;
 	private SQLite sqlite;
-	private Textures textures;
+	private Animations animations;
 
 	public void init() {
 		initWindow();
@@ -133,7 +132,7 @@ public class Core {
 			}
 		});
 
-		textures.loadFrom(Paths.get("assets/graphics/"));
+		animations.loadFrom(Paths.get("assets/graphics/"));
 	}
 
 	private void initImGui() {
@@ -406,16 +405,12 @@ public class Core {
 		return sqlite.getDB(name);
 	}
 
-	public void setTextures(Textures textures) {
-		this.textures = textures;
+	public void setAnimations(Animations textures) {
+		this.animations = textures;
 	}
 
 	public Animation getAnimation(String key) {
-		return textures.getAnimation(key);
-	}
-
-	public Texture getTexture(String key, int frame) {
-		return textures.getAnimation(key).getFrames().get(frame);
+		return animations.getAnimation(key);
 	}
 
 	public ImFont getFont(String name, int size) {

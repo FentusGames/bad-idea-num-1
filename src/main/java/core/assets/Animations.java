@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import core.texture.Animation;
 import core.texture.Texture;
 
-public class Textures {
-	private static final Logger logger = LoggerFactory.getLogger(Textures.class);
+public class Animations {
+	private static final Logger logger = LoggerFactory.getLogger(Animations.class);
 	private final Map<String, Animation> animations = new HashMap<>();
 
 	public void loadFrom(Path folderPath) {

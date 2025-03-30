@@ -9,9 +9,10 @@ import org.joml.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import core.interfaces.Disposable;
 import core.interfaces.Renderable;
 
-public class Animation implements Renderable {
+public class Animation implements Renderable, Disposable {
 	private static final Logger logger = LoggerFactory.getLogger(Animation.class);
 
 	private Vector3f pos = new Vector3f(0, 0, 0);
@@ -64,6 +65,11 @@ public class Animation implements Renderable {
 			glColor4f(1, 1, 1, 1);
 			colorMask.unbind();
 		}
+	}
+
+	@Override
+	public void dispose() {
+		getFrames().forEach(frame -> frame.dispose());
 	}
 
 	private void drawQuad(Texture texture, Vector3f position, Quaternionf rotation) {
@@ -144,7 +150,7 @@ public class Animation implements Renderable {
 	public void setA(float a) {
 		this.a = a;
 	}
-	
+
 	public List<Texture> getFrames() {
 		return frames;
 	}
