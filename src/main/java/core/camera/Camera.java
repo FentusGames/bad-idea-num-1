@@ -17,6 +17,7 @@ public class Camera {
 	private float zoomLevel = 1.0F;
 	private Matrix4f projectionMatrix;
 	private float extraWidthFactor = 0.0f;
+	
 	// Target internal resolution
 	private final float TARGET_WIDTH = 1366.0f;
 	private final float TARGET_HEIGHT = 768.0f;
