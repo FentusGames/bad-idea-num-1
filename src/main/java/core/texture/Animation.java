@@ -47,7 +47,7 @@ public class Animation implements Renderable, Disposable {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 		Texture frame = frames.get(currentFrame);
 		if (frame == null || frame.getID() == 0) {
 			logger.warn("Attempted to render a null or invalid frame.");
@@ -80,15 +80,18 @@ public class Animation implements Renderable, Disposable {
 		glRotatef(rotation.y, 0, 1, 0);
 		glRotatef(rotation.z, 0, 0, 1);
 
+		float halfWidth = texture.getWidth() / 2;
+		float halfHeight = texture.getHeight() / 2;
+
 		glBegin(GL_QUADS);
 		glTexCoord2f(0, 0);
-		glVertex2f(-texture.getWidth(), -texture.getHeight());
+		glVertex2f(-halfWidth, -halfHeight);
 		glTexCoord2f(1, 0);
-		glVertex2f(texture.getWidth(), -texture.getHeight());
+		glVertex2f(halfWidth, -halfHeight);
 		glTexCoord2f(1, 1);
-		glVertex2f(texture.getWidth(), texture.getHeight());
+		glVertex2f(halfWidth, halfHeight);
 		glTexCoord2f(0, 1);
-		glVertex2f(-texture.getWidth(), texture.getHeight());
+		glVertex2f(-halfWidth, halfHeight);
 		glEnd();
 	}
 

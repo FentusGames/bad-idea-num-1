@@ -5,7 +5,6 @@ import org.lwjgl.opengl.GL11;
 import core.Core;
 import core.camera.Camera;
 import core.texture.Texture;
-import imgui.ImGui;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
@@ -16,34 +15,29 @@ public class ScreenGame extends Screen {
 	}
 
 	@Override
-	public void init() {
-		super.init();
-
-		background.setWidth(core.getWindowWidth());
-		background.setHeight(core.getWindowHeight());
+	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+		super.init(windowX, windowY, windowWidth, windowHeight);
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		camera.apply();
 
-		background.render(delta);
+		background.render(delta, windowX, windowY, windowWidth, windowHeight);
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 
 	}
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		ImGui.begin("Debug");
-		ImGui.text(String.format("X: %s Y: %s", camera.getPosition().x, camera.getPosition().y));
-		ImGui.end();
+
 	}
 
 	@Override

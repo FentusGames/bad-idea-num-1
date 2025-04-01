@@ -14,7 +14,7 @@ public class Camera {
 	private long windowPtr;
 
 	private Vector3f position = new Vector3f();
-	private float zoomLevel = 1.0F / 256F;
+	private float zoomLevel = 1.0F;
 	private Matrix4f projectionMatrix;
 
 	public Camera(long windowPtr) {
@@ -22,33 +22,65 @@ public class Camera {
 	}
 
 	public void apply() {
-		int[] width = new int[1], height = new int[1];
-		GLFW.glfwGetFramebufferSize(windowPtr, width, height);
-		GL11.glViewport(0, 0, width[0], height[0]);
+		// Get the actual window size
+		int[] windowWidth = new int[1], windowHeight = new int[1];
+		GLFW.glfwGetFramebufferSize(windowPtr, windowWidth, windowHeight);
 
+		// Target internal resolution
+		final float TARGET_WIDTH = 1366.0f;
+		final float TARGET_HEIGHT = 768.0f;
+		final float TARGET_ASPECT = TARGET_WIDTH / TARGET_HEIGHT;
+
+		// Calculate current aspect ratio
+		float currentAspect = (float) windowWidth[0] / (float) windowHeight[0];
+
+		// Calculate the viewport size and position for letterboxing
+		int viewportX, viewportY, viewportWidth, viewportHeight;
+
+		if (currentAspect > TARGET_ASPECT) {
+			// Window is wider than target aspect - letterbox on sides
+			viewportHeight = windowHeight[0];
+			viewportWidth = (int) (windowHeight[0] * TARGET_ASPECT);
+			viewportX = (windowWidth[0] - viewportWidth) / 2;
+			viewportY = 0;
+		} else {
+			// Window is taller than target aspect - letterbox on top/bottom
+			viewportWidth = windowWidth[0];
+			viewportHeight = (int) (windowWidth[0] / TARGET_ASPECT);
+			viewportX = 0;
+			viewportY = (windowHeight[0] - viewportHeight) / 2;
+		}
+
+		// Set the viewport to the letterboxed area
+		GL11.glViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+
+		// Create projection matrix for internal resolution
 		projectionMatrix = new Matrix4f();
 
-		float aspect = (float) width[0] / height[0];
-		float hFOV = (float) Math.toDegrees(2 * Math.atan(Math.tan(Math.toRadians(60) / 2) * aspect));
-		float zNear = 0.1f;
-		float zFar = 1000.0f;
-		float yScale = (float) (1.0f / Math.tan(Math.toRadians(hFOV / 2.0f)));
-		float xScale = yScale / aspect;
-		float frustumLength = zFar - zNear;
+		// For 2D orthographic projection with fixed internal resolution
+		float halfWidth = TARGET_WIDTH / 2.0f;
+		float halfHeight = TARGET_HEIGHT / 2.0f;
 
-		projectionMatrix.m00(xScale);
-		projectionMatrix.m11(yScale);
-		projectionMatrix.m22(-(zFar + zNear) / frustumLength);
-		projectionMatrix.m23(-2 * zFar * zNear / frustumLength);
-		projectionMatrix.m32(-1);
+		// Create orthographic projection
+		projectionMatrix.ortho2D(-halfWidth, halfWidth, -halfHeight, halfHeight);
+
+		// Apply zoom (scaling)
 		projectionMatrix.scale(zoomLevel);
+
+		// Apply camera position (translation)
 		projectionMatrix.translate(-position.x, -position.y, -position.z);
 
+		// Load the projection matrix
 		FloatBuffer projectionViewBuffer = BufferUtils.createFloatBuffer(16);
 		projectionMatrix.get(projectionViewBuffer);
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadMatrixf(projectionViewBuffer);
-		projectionViewBuffer.rewind();
+
+		// Clear the entire window to black (for letterboxing)
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glLoadIdentity();
+		GL11.glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	}
 
 	public Vector3f getMousePosition() {

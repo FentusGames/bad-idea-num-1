@@ -20,16 +20,16 @@ public class ScreenMainMenu extends Screen {
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+		super.init(windowX, windowY, windowWidth, windowHeight);
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 	}
 
 	@Override
@@ -56,14 +56,6 @@ public class ScreenMainMenu extends Screen {
 
 		if (customSlantedButton("Play", 250F, buttonWidthOffsets)) {
 			core.setScreen(new ScreenGame(core));
-		}
-		ImGui.spacing();
-		if (customSlantedButton("Load Game", 225F, buttonWidthOffsets)) {
-			core.setScreen(new ScreenLoadGame(core));
-		}
-		ImGui.spacing();
-		if (customSlantedButton("Settings", 200F, buttonWidthOffsets)) {
-			core.setScreen(new ScreenSettings(core));
 		}
 		ImGui.spacing();
 		if (customSlantedButton("Exit", 175F, buttonWidthOffsets)) {

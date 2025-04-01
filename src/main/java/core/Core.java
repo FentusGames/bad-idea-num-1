@@ -245,12 +245,12 @@ public class Core {
 			lastTime = now;
 
 			while (delta >= 1.0F) {
-				screen.update(delta);
+				screen.update(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 				updates++;
 				delta--;
 			}
 
-			screen.render(delta);
+			screen.render(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 
 			imGuiGlfw.newFrame();
 			ImGui.newFrame();
@@ -307,7 +307,7 @@ public class Core {
 
 		this.screen = screen;
 
-		screen.init();
+		screen.init(windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
 
 		return screen.getCore();
 	}

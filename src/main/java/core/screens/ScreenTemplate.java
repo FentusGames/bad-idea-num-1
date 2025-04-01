@@ -8,17 +8,17 @@ public class ScreenTemplate extends Screen {
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+		super.init(windowX, windowY, windowWidth, windowHeight);
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 
 	}
 
 	@Override
-	public void update(float delta) {
+	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 
 	}
 

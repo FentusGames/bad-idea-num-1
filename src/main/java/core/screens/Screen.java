@@ -26,17 +26,17 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 	}
 
 	@Override
-	public void init() {
+	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
 		core.setScrollCallback(this);
 		core.setMouseButtonCallback(this);
 		core.setKeyCallback(this);
 	}
 
 	@Override
-	public abstract void render(float delta);
+	public abstract void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
 
 	@Override
-	public abstract void update(float delta);
+	public abstract void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
 
 	@Override
 	public abstract void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
