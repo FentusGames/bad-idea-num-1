@@ -79,7 +79,7 @@ public class Camera {
 		// Clear the entire window to black (for letterboxing)
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glLoadIdentity();
-		GL11.glClearColor(0.3f, 0.0f, 0.0f, 1.0f);
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 	}
 
