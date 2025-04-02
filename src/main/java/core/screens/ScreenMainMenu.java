@@ -58,7 +58,7 @@ public class ScreenMainMenu extends Screen {
 			core.setScreen(new ScreenGame(core));
 		}
 		ImGui.spacing();
-		if (customSlantedButton("Exit", 175F, buttonWidthOffsets)) {
+		if (customSlantedButton("Exit", 225F, buttonWidthOffsets)) {
 			System.exit(0);
 		}
 
