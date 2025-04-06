@@ -42,28 +42,29 @@ public class ScreenGame extends Screen {
 		// Panel #1 — fixed font size
 		ImFont fixedFont = core.getFont("default", 12);
 		ImFont scaledFont = core.getScaledFont("default", 12);
-		
-		ImGui.pushFont(fixedFont);
+
+		ImGui.begin("Demo Panel #1");
 		{
-			ImGui.begin("Demo Panel #1");
-			ImGui.text("Fixed font (12 @ 1366x768)");
-			ImGui.text(String.format("Font Size: %.1f", fixedFont.getFontSize()));
-			ImGui.text(String.format("Delta Time: %.3f", delta));
-			ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+			ImGui.pushFont(fixedFont);
+			{
+				ImGui.text("Fixed font (12 @ 1366x768)");
+				ImGui.text(String.format("Font Size: %.1f", fixedFont.getFontSize()));
+				ImGui.text(String.format("Delta Time: %.3f", delta));
+				ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+			}
+			ImGui.popFont();
+
+			ImGui.newLine();
+
+			ImGui.pushFont(scaledFont);
+			{
+				ImGui.text("Scaled font based on resolution");
+				ImGui.text(String.format("Font Size: %.1f", scaledFont.getFontSize()));
+				ImGui.text(String.format("Delta Time: %.3f", delta));
+				ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+			}
+			ImGui.popFont();
 		}
-		ImGui.popFont();
-
-		ImGui.newLine();
-
-		ImGui.pushFont(scaledFont);
-		{
-			ImGui.text("Scaled font based on resolution");
-			ImGui.text(String.format("Font Size: %.1f", scaledFont.getFontSize()));
-			ImGui.text(String.format("Delta Time: %.3f", delta));
-			ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
-		}
-		ImGui.popFont();
-
 		ImGui.end();
 	}
 
