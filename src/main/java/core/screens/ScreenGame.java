@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 
 import core.Core;
 import core.camera.Camera;
+import core.helpers.HImGui;
+import core.helpers.HImGui.TextAlign;
 import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
@@ -48,12 +50,17 @@ public class ScreenGame extends Screen {
 			ImGui.text(String.format("Font Size: %.1f", fixedFont.getFontSize()));
 			ImGui.text(String.format("Delta Time: %.3f", delta));
 			ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+
+			if (HImGui.imageButton(core, "graphics_buttons_test", "TEST", TextAlign.CENTER)) {
+				System.out.println("TEST BUTTON");
+			}
+
 			ImGui.end();
 			ImGui.popFont();
 		}
 
 		// Panel #2 — dynamically scaled font
-		ImFont scaledFont = core.getScaledFont("default", 12);
+		ImFont scaledFont = core.getScaledFont("default", 40);
 		if (scaledFont != null) {
 			ImGui.pushFont(scaledFont);
 			ImGui.begin("Demo Panel #2");
