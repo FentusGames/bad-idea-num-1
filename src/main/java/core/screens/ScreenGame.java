@@ -39,7 +39,7 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		ImGui.begin("Demo Panel #1");
+		ImGui.begin("Demo Panel");
 		{
 			ImFont fixedFont = core.getFont("default", 12);
 			ImGui.pushFont(fixedFont);
