@@ -19,6 +19,10 @@ public class Fonts {
 
 	private final Map<String, ImFont> fonts = new HashMap<>();
 
+	private static final int MIN = 12;
+	private static final int MAX = 64;
+	private static final int STEP = 1;
+
 	public void loadFrom(Path folderPath) {
 		if (!Files.exists(folderPath)) {
 			logger.warn("Font folder does not exist: {}", folderPath.toAbsolutePath());
@@ -34,16 +38,16 @@ public class Fonts {
 				String filename = file.getFileName().toString();
 				String name = filename.substring(0, filename.lastIndexOf('.')).toLowerCase();
 
-				String out = "";
-				for (int size = 8; size <= 64; size += 1) {
+				StringBuilder loadedKeys = new StringBuilder();
+				for (int size = MIN; size <= MAX; size += STEP) {
 					ImFont font = io.getFonts().addFontFromFileTTF(file.toAbsolutePath().toString(), size);
 					if (font != null) {
 						String key = "fonts_" + name + "_" + size;
 						fonts.put(key, font);
-						out += key + (size < 64 ? ", " : "");
+						loadedKeys.append(key).append(size < MAX ? ", " : "");
 					}
 				}
-				logger.info("Loaded Font Keys: {}", out);
+				logger.info("Loaded Font Keys: {}", loadedKeys);
 			}
 		} catch (Exception e) {
 			logger.error("Failed to load fonts from: {}", folderPath, e);
@@ -53,4 +57,27 @@ public class Fonts {
 	public ImFont getFont(String name, int size) {
 		return fonts.get("fonts_" + name + "_" + size);
 	}
+
+	public ImFont getScaledFont(String name, int baseSize) {
+		ImGuiIO io = ImGui.getIO();
+		float currentWidth = io.getDisplaySizeX();
+		float currentHeight = io.getDisplaySizeY();
+
+		// Calculate current pixel area
+		float currentArea = currentWidth * currentHeight;
+		float baseArea = 1366.0f * 768.0f;
+
+		// Ratio of current area to base area
+		float scale = currentArea / baseArea * 0.65F;
+
+		// Scale the base font size by this ratio
+		int scaledSize = Math.round(baseSize * scale);
+
+		// Clamp and align to nearest step
+		int clampedSize = Math.max(MIN, Math.min(MAX, scaledSize));
+		int alignedSize = ((clampedSize - MIN + STEP / 2) / STEP) * STEP + MIN;
+		
+		return getFont(name, alignedSize);
+	}
+
 }

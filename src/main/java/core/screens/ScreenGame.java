@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import core.Core;
 import core.camera.Camera;
 import core.texture.Texture;
+import imgui.ImFont;
+import imgui.ImGui;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
@@ -37,7 +39,31 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+		// Panel #1 — fixed font size
+		ImFont fixedFont = core.getFont("default", 12);
+		if (fixedFont != null) {
+			ImGui.pushFont(fixedFont);
+			ImGui.begin("Demo Panel #1");
+			ImGui.text("Fixed font (12 @ 1366x768)");
+			ImGui.text(String.format("Font Size: %.1f", fixedFont.getFontSize()));
+			ImGui.text(String.format("Delta Time: %.3f", delta));
+			ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+			ImGui.end();
+			ImGui.popFont();
+		}
 
+		// Panel #2 — dynamically scaled font
+		ImFont scaledFont = core.getScaledFont("default", 12);
+		if (scaledFont != null) {
+			ImGui.pushFont(scaledFont);
+			ImGui.begin("Demo Panel #2");
+			ImGui.text("Scaled font based on resolution");
+			ImGui.text(String.format("Font Size: %.1f", scaledFont.getFontSize()));
+			ImGui.text(String.format("Delta Time: %.3f", delta));
+			ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+			ImGui.end();
+			ImGui.popFont();
+		}
 	}
 
 	@Override

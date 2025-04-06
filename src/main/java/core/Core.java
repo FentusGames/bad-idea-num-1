@@ -422,6 +422,10 @@ public class Core {
 		return fonts.getFont(name, size);
 	}
 
+	public ImFont getScaledFont(String name, int size) {
+		return fonts.getScaledFont(name, size);
+	}
+
 	public Screen getScreen() {
 		return screen;
 	}
