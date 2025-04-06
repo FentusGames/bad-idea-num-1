@@ -39,12 +39,9 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		// Panel #1 — fixed font size
-		ImFont fixedFont = core.getFont("default", 12);
-		ImFont scaledFont = core.getScaledFont("default", 12);
-
 		ImGui.begin("Demo Panel #1");
 		{
+			ImFont fixedFont = core.getFont("default", 12);
 			ImGui.pushFont(fixedFont);
 			{
 				ImGui.text("Fixed font (12 @ 1366x768)");
@@ -56,6 +53,7 @@ public class ScreenGame extends Screen {
 
 			ImGui.newLine();
 
+			ImFont scaledFont = core.getScaledFont("default", 12);
 			ImGui.pushFont(scaledFont);
 			{
 				ImGui.text("Scaled font based on resolution");
