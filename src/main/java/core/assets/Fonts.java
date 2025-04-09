@@ -44,7 +44,9 @@ public class Fonts {
 					if (font != null) {
 						String key = "fonts_" + name + "_" + size;
 						fonts.put(key, font);
-						loadedKeys.append(key).append(size < MAX ? ", " : "");
+						if (size == MIN || size == MAX) {
+							loadedKeys.append(key).append(size < MAX ? " to " : "");
+						}
 					}
 				}
 				logger.info("Loaded Font Keys: {}", loadedKeys);
