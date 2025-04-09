@@ -54,8 +54,6 @@ public class Animations {
 					logger.info("Loaded Animation: {} -> Key: {} with {} frames", folderKey, key, frames.size());
 				}
 			}
-
-			logger.info("Loaded animations: {}", animations.keySet());
 		} catch (Exception e) {
 			logger.error("Failed to load animations from: {}", folderPath, e);
 		}
