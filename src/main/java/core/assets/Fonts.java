@@ -22,7 +22,6 @@ public class Fonts {
 	private static final int MIN = 12;
 	private static final int MAX = 64;
 	private static final int STEP = 1;
-	private static final float BASE_HEIGHT = 768.0f;
 
 	public void loadFrom(Path folderPath) {
 		if (!Files.exists(folderPath)) {
@@ -57,21 +56,5 @@ public class Fonts {
 
 	public ImFont getFont(String name, int size) {
 		return fonts.get("fonts_" + name + "_" + size);
-	}
-
-	public ImFont getScaledFont(String name, int baseSize) {
-		ImGuiIO io = ImGui.getIO();
-		float currentHeight = io.getDisplaySizeY();
-
-		// Scale proportionally from 768p base height
-		float scale = currentHeight / BASE_HEIGHT;
-
-		int scaledSize = Math.round(baseSize * scale);
-
-		// Clamp and align to nearest step
-		int clampedSize = Math.max(MIN, Math.min(MAX, scaledSize));
-		int alignedSize = ((clampedSize - MIN + STEP / 2) / STEP) * STEP + MIN;
-
-		return getFont(name, alignedSize);
 	}
 }

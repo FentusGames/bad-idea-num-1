@@ -30,6 +30,7 @@ import core.texture.Animation;
 import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
@@ -67,6 +68,8 @@ public class Core {
 	private Language language;
 	private SQLite sqlite;
 	private Animations animations;
+
+	private static final float BASE_HEIGHT = 768.0f;
 
 	public void init() {
 		initWindow();
@@ -422,10 +425,6 @@ public class Core {
 		return fonts.getFont(name, size);
 	}
 
-	public ImFont getScaledFont(String name, int size) {
-		return fonts.getScaledFont(name, size);
-	}
-
 	public Screen getScreen() {
 		return screen;
 	}
@@ -444,5 +443,17 @@ public class Core {
 
 	public int getWindowY() {
 		return windowY[0];
+	}
+
+	public int getScale(int baseSize) {
+		ImGuiIO io = ImGui.getIO();
+		float currentHeight = io.getDisplaySizeY();
+
+		// Scale proportionally from 768p base height
+		float scale = currentHeight / BASE_HEIGHT;
+
+		int scaledSize = Math.round(baseSize * scale);
+
+		return scaledSize;
 	}
 }
