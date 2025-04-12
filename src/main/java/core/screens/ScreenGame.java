@@ -38,7 +38,15 @@ public class ScreenGame extends Screen {
 
 		camera.apply();
 
-		background.render(delta, windowX, windowY, windowWidth, windowHeight);
+		for (int row = -5; row <= 5; row++) {
+			for (int col = -5; col <= 5; col++) {
+				float xPos = col * background.getWidth();
+				float yPos = row * background.getHeight();
+				background.setX(xPos);
+				background.setY(yPos);
+				background.render(delta, 0, 0, 0, 0);
+			}
+		}
 	}
 
 	@Override
