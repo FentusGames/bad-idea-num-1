@@ -73,7 +73,7 @@ public class ScreenGame extends Screen {
 
 			core.getTexture("graphics_buttons_test", 0);
 			
-			if (HImGui.imageButton(core.getAnimation("graphics_buttons_test"), 64, 64)) {
+			if (HImGui.imageButton(core.getAnimation("graphics_buttons_test"))) {
 				System.out.println("Clicked");
 			}
 		}

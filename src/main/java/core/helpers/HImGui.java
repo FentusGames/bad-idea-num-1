@@ -1,6 +1,7 @@
 package core.helpers;
 
 import core.texture.Animation;
+import core.texture.Texture;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiButtonFlags;
@@ -53,6 +54,12 @@ public class HImGui {
 
 	public static boolean imageButton(Animation animation, float width, float height) {
 		return imageButton(animation, width, height, 0, false, false);
+	}
+
+	public static boolean imageButton(Animation animation) {
+		Texture texture = animation.getFrames().get(0);
+
+		return imageButton(animation, texture.getWidth(), texture.getHeight(), 0, false, false);
 	}
 
 	public static boolean imageButton(Animation animation, float width, float height, int rotationDegrees, boolean flipX, boolean flipY) {
