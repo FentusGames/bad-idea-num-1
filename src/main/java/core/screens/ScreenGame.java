@@ -24,6 +24,8 @@ public class ScreenGame extends Screen {
 
 	private static final float CAMERA_LERP_FACTOR = 0.1f;
 
+	private final Vector2i pos = new Vector2i(0, 0);
+
 	private final Map<Vector2i, Texture> world = new HashMap<>();
 
 	public ScreenGame(Core core) {
@@ -128,45 +130,57 @@ public class ScreenGame extends Screen {
 
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 
-		ImGui.setNextWindowPos(halfW - imageHW, 10);
-		ImGui.setNextWindowSize(imageW, imageH);
-		ImGui.begin("ButtonWindow_Up", flags);
-		{
-			if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
-				targetCameraY += core.getTexture("graphics_background", 0).getHeight();
+		if (world.containsKey(new Vector2i(pos.x, pos.y + 1))) {
+			ImGui.setNextWindowPos(halfW - imageHW, 10);
+			ImGui.setNextWindowSize(imageW, imageH);
+			ImGui.begin("ButtonWindow_Up", flags);
+			{
+				if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
+					targetCameraY += core.getTexture("graphics_background", 0).getHeight();
+					pos.y += 1;
+				}
 			}
+			ImGui.end();
 		}
-		ImGui.end();
 
-		ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
-		ImGui.setNextWindowSize(imageW, imageH);
-		ImGui.begin("ButtonWindow_Right", flags);
-		{
-			if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
-				targetCameraX += core.getTexture("graphics_background", 0).getWidth();
+		if (world.containsKey(new Vector2i(pos.x + 1, pos.y))) {
+			ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
+			ImGui.setNextWindowSize(imageW, imageH);
+			ImGui.begin("ButtonWindow_Right", flags);
+			{
+				if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
+					targetCameraX += core.getTexture("graphics_background", 0).getWidth();
+					pos.x += 1;
+				}
 			}
+			ImGui.end();
 		}
-		ImGui.end();
 
-		ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
-		ImGui.setNextWindowSize(imageW, imageH);
-		ImGui.begin("ButtonWindow_Down", flags);
-		{
-			if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
-				targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
+		if (world.containsKey(new Vector2i(pos.x, pos.y - 1))) {
+			ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
+			ImGui.setNextWindowSize(imageW, imageH);
+			ImGui.begin("ButtonWindow_Down", flags);
+			{
+				if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
+					targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
+					pos.y -= 1;
+				}
 			}
+			ImGui.end();
 		}
-		ImGui.end();
 
-		ImGui.setNextWindowPos(10, halfH - imageHH);
-		ImGui.setNextWindowSize(imageW, imageH);
-		ImGui.begin("ButtonWindow_Left", flags);
-		{
-			if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
-				targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
+		if (world.containsKey(new Vector2i(pos.x - 1, pos.y))) {
+			ImGui.setNextWindowPos(10, halfH - imageHH);
+			ImGui.setNextWindowSize(imageW, imageH);
+			ImGui.begin("ButtonWindow_Left", flags);
+			{
+				if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
+					targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
+					pos.x -= 1;
+				}
 			}
+			ImGui.end();
 		}
-		ImGui.end();
 
 		ImGui.popStyleVar();
 	}
