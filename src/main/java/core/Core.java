@@ -456,4 +456,16 @@ public class Core {
 
 		return scaledSize;
 	}
+
+	public float getScale(float baseSize) {
+		ImGuiIO io = ImGui.getIO();
+		float currentHeight = io.getDisplaySizeY();
+
+		// Scale proportionally from 768p base height
+		float scale = currentHeight / BASE_HEIGHT;
+
+		float scaledSize = baseSize * scale;
+
+		return scaledSize;
+	}
 }

@@ -1,7 +1,8 @@
 package core.helpers;
 
-import core.texture.Animation;
+import core.Core;
 import core.texture.Texture;
+import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiButtonFlags;
@@ -16,74 +17,122 @@ public class HImGui {
 		imageRotated(textureId, width, height, rotationDegrees, false, false);
 	}
 
-	public static void imageRotated(int textureId, float width, float height, int rotationDegrees, boolean flipX, boolean flipY) {
-		// Normalize rotation
-		int rotation = ((rotationDegrees % 360) + 360) % 360;
+	public static void imageRotated(int textureId, float width, float height, float rotationDegrees, boolean flipX, boolean flipY) {
+		final ImDrawList drawList = ImGui.getWindowDrawList();
 
+		ImVec2 screenPos = ImGui.getCursorScreenPos();
+		float x = screenPos.x;
+		float y = screenPos.y;
+
+		float cx = x + width * 0.5f;
+		float cy = y + height * 0.5f;
+
+		// @formatter:off
+		ImVec2[] corners = new ImVec2[] {
+			new ImVec2(-width * 0.5f, -height * 0.5f),	// top-left
+			new ImVec2(width * 0.5f, -height * 0.5f),	// top-right
+			new ImVec2(width * 0.5f, height * 0.5f),	// bottom-right
+			new ImVec2(-width * 0.5f, height * 0.5f),	// bottom-left
+		};
+		// @formatter:on
+
+		// Convert degrees -> radians
+		float rad = (float) Math.toRadians(rotationDegrees);
+		float cosA = (float) Math.cos(rad);
+		float sinA = (float) Math.sin(rad);
+
+		for (ImVec2 corner : corners) {
+			float oldX = corner.x;
+			float oldY = corner.y;
+
+			float rx = oldX * cosA - oldY * sinA;
+			float ry = oldX * sinA + oldY * cosA;
+
+			corner.x = rx + cx;
+			corner.y = ry + cy;
+		}
+
+		// @formatter:off
 		float[][] uv = {
-			// @formatter:off
 			{ 0.0f, 0.0f }, // top-left
 			{ 1.0f, 0.0f }, // top-right
 			{ 1.0f, 1.0f }, // bottom-right
 			{ 0.0f, 1.0f }, // bottom-left
-			// @formatter:on
 		};
+		// @formatter:on
 
-		// Flip X (left-right)
+		// Flip in X?
 		if (flipX) {
-			for (float[] corner : uv) {
-				corner[0] = 1.0f - corner[0];
+			for (float[] u : uv) {
+				u[0] = 1.0f - u[0];
 			}
 		}
 
-		// Flip Y (top-bottom)
+		// Flip in Y?
 		if (flipY) {
-			for (float[] corner : uv) {
-				corner[1] = 1.0f - corner[1];
+			for (float[] u : uv) {
+				u[1] = 1.0f - u[1];
 			}
 		}
 
-		// Rotate by shifting the corners
-		int shift = rotation / 90;
-		float[] uv0 = uv[(0 + shift) % 4];
-		float[] uv2 = uv[(2 + shift) % 4];
+		// @formatter:off
+		drawList.addImageQuad(
+			textureId, 
+			corners[0].x, corners[0].y, 
+			corners[1].x, corners[1].y, 
+			corners[2].x, corners[2].y, 
+			corners[3].x, corners[3].y, 
+			uv[0][0], uv[0][1], 
+			uv[1][0], uv[1][1], 
+			uv[2][0], uv[2][1], 
+			uv[3][0], uv[3][1], 
+			0xFFFFFFFF
+		);
+		// @formatter:on
 
-		// Draw using upper-left and lower-right bounds
-		ImGui.image(textureId, width, height, uv0[0], uv0[1], uv2[0], uv2[1]);
+		ImGui.setCursorScreenPos(x, y + height);
 	}
 
-	public static boolean imageButton(Animation animation, float width, float height) {
-		return imageButton(animation, width, height, 0, false, false);
+	public static boolean imageButton(Core core, String key, String name, float width, float height) {
+		return imageButton(core, key, name, width, height, 0, false, false);
 	}
 
-	public static boolean imageButton(Animation animation) {
-		Texture texture = animation.getFrames().get(0);
-
-		return imageButton(animation, texture.getWidth(), texture.getHeight(), 0, false, false);
+	public static boolean imageButton(Core core, String key, String name, Boolean scale) {
+		return imageButton(core, key, name, scale, 0);
 	}
 
-	public static boolean imageButton(Animation animation, float width, float height, int rotationDegrees, boolean flipX, boolean flipY) {
-		if (animation.getFrames().size() < 3) {
+	public static boolean imageButton(Core core, String key, String name, Boolean scale, int rotationDegrees) {
+		Texture texture = core.getAnimation(key).getFrames().get(0);
+
+		if (scale) {
+			return imageButton(core, key, name, core.getScale(texture.getWidth()), core.getScale(texture.getHeight()), rotationDegrees, false, false);
+		} else {
+			return imageButton(core, key, name, texture.getWidth(), texture.getHeight(), rotationDegrees, false, false);
+		}
+	}
+
+	public static boolean imageButton(Core core, String key, String name, float width, float height, int rotationDegrees, boolean flipX, boolean flipY) {
+		if (core.getAnimation(key).getFrames().size() < 3) {
 			throw new IllegalArgumentException("Animation must have >= 3 frames: 0=active,1=hover,2=idle");
 		}
 
-		ImGui.pushID(animation.getFrames().get(2).getID());
+		ImGui.pushID(core.getAnimation(key).getFrames().get(2).getID());
 
 		ImVec2 startPos = new ImVec2();
 		ImGui.getCursorPos(startPos);
 
-		boolean clicked = ImGui.invisibleButton("##imageButton", width, height, ImGuiButtonFlags.None);
+		boolean clicked = ImGui.invisibleButton("##imageButton_" + name, width, height, ImGuiButtonFlags.None);
 
 		boolean isActive = ImGui.isItemActive();
 		boolean isHovered = ImGui.isItemHovered();
 
 		int textureId;
 		if (isActive) {
-			textureId = animation.getFrames().get(0).getID(); // ACTIVE
+			textureId = core.getAnimation(key).getFrames().get(0).getID(); // ACTIVE
 		} else if (isHovered) {
-			textureId = animation.getFrames().get(1).getID(); // HOVER
+			textureId = core.getAnimation(key).getFrames().get(1).getID(); // HOVER
 		} else {
-			textureId = animation.getFrames().get(2).getID(); // IDLE
+			textureId = core.getAnimation(key).getFrames().get(2).getID(); // IDLE
 		}
 
 		ImGui.setCursorPos(startPos.x, startPos.y);

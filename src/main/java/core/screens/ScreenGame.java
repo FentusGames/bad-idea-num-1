@@ -1,5 +1,6 @@
 package core.screens;
 
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import core.Core;
@@ -8,10 +9,17 @@ import core.helpers.HImGui;
 import core.texture.Texture;
 import imgui.ImFont;
 import imgui.ImGui;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
 	private final Texture background = core.getTexture("graphics_background", 0);
+
+	private float targetCameraX = 0.0f;
+	private float targetCameraY = 0.0f;
+
+	private static final float CAMERA_LERP_FACTOR = 0.1f;
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -35,7 +43,13 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+		float currentX = camera.getPosition().x;
+		float currentY = camera.getPosition().y;
 
+		float newX = currentX + CAMERA_LERP_FACTOR * (targetCameraX - currentX);
+		float newY = currentY + CAMERA_LERP_FACTOR * (targetCameraY - currentY);
+
+		camera.setPosition(new Vector3f(newX, newY, 0));
 	}
 
 	@Override
@@ -73,11 +87,72 @@ public class ScreenGame extends Screen {
 
 			core.getTexture("graphics_buttons_test", 0);
 
-			if (HImGui.imageButton(core.getAnimation("graphics_buttons_test"))) {
-				System.out.println("Clicked");
+			// UP
+			if (HImGui.imageButton(core, "graphics_buttons_test", "Up", true, 0)) {
+				System.out.println("UP");
+				camera.translate(0, camera.getActualViewHeight());
+			}
+
+			// DOWN
+			if (HImGui.imageButton(core, "graphics_buttons_test", "Down", true, 180)) {
+				System.out.println("DOWN");
+				camera.translate(0, -camera.getActualViewHeight());
 			}
 		}
 		ImGui.end();
+
+		float imageW = core.getScale(64);
+		float imageH = core.getScale(64);
+		float imageHW = imageW * 0.5f;
+		float imageHH = imageH * 0.5f;
+		float halfW = windowWidth * 0.5f;
+		float halfH = windowHeight * 0.5f;
+
+		int flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoBackground;
+
+		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+
+		ImGui.setNextWindowPos(halfW - imageHW, 10);
+		ImGui.setNextWindowSize(imageW, imageH);
+		ImGui.begin("ButtonWindow_Up", flags);
+		{
+			if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
+				targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
+			}
+		}
+		ImGui.end();
+
+		ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
+		ImGui.setNextWindowSize(imageW, imageH);
+		ImGui.begin("ButtonWindow_Down", flags);
+		{
+			if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
+				targetCameraY += core.getTexture("graphics_background", 0).getHeight();
+			}
+		}
+		ImGui.end();
+
+		ImGui.setNextWindowPos(10, halfH - imageHH);
+		ImGui.setNextWindowSize(imageW, imageH);
+		ImGui.begin("ButtonWindow_Left", flags);
+		{
+			if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
+				targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
+			}
+		}
+		ImGui.end();
+
+		ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
+		ImGui.setNextWindowSize(imageW, imageH);
+		ImGui.begin("ButtonWindow_Right", flags);
+		{
+			if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
+				targetCameraX += core.getTexture("graphics_background", 0).getWidth();
+			}
+		}
+		ImGui.end();
+
+		ImGui.popStyleVar();
 	}
 
 	@Override
