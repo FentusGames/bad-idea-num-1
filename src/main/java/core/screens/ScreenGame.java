@@ -68,6 +68,14 @@ public class ScreenGame extends Screen {
 
 			Texture texture = core.getTexture("graphics_background", 0);
 			HImGui.imageRotated(texture.getID(), core.getScale(256), core.getScale(108));
+
+			ImGui.newLine();
+
+			core.getTexture("graphics_buttons_test", 0);
+			
+			if (HImGui.imageButton(core.getAnimation("graphics_buttons_test"), 64, 64)) {
+				System.out.println("Clicked");
+			}
 		}
 		ImGui.end();
 	}

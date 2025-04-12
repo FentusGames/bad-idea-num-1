@@ -69,7 +69,6 @@ public class Animations {
 		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
 		IntBuffer channelsBuffer = BufferUtils.createIntBuffer(1);
 
-		STBImage.stbi_set_flip_vertically_on_load(true);
 		ByteBuffer imageData = STBImage.stbi_load(filePath.toAbsolutePath().toString(), widthBuffer, heightBuffer, channelsBuffer, 4);
 
 		if (imageData == null) {
