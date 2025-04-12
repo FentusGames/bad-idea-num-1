@@ -17,7 +17,7 @@ public class Camera {
 	private float zoomLevel = 1.0F;
 	private Matrix4f projectionMatrix;
 	private float extraWidthFactor = 0.0f;
-	
+
 	// Target internal resolution
 	private final float TARGET_WIDTH = 1366.0f;
 	private final float TARGET_HEIGHT = 768.0f;
@@ -250,5 +250,10 @@ public class Camera {
 
 		// Create a new Vector2f with the screen space coordinates
 		return new Vector2f(screenX, screenY);
+	}
+
+	public void translate(float dx, float dy) {
+		this.position.x += dx;
+		this.position.y += dy;
 	}
 }
