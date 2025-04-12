@@ -417,6 +417,10 @@ public class Core {
 		return animations.getAnimation(key);
 	}
 
+	public Texture getTexture(String key) {
+		return animations.getAnimation(key).getFrames().get(0);
+	}
+
 	public Texture getTexture(String key, int index) {
 		return animations.getAnimation(key).getFrames().get(index);
 	}

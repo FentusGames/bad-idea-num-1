@@ -1,5 +1,9 @@
 package core.screens;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
@@ -14,12 +18,13 @@ import imgui.flag.ImGuiWindowFlags;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
-	private final Texture background = core.getTexture("graphics_background", 0);
 
 	private float targetCameraX = 0.0f;
 	private float targetCameraY = 0.0f;
 
-	private static final float CAMERA_LERP_FACTOR = 0.05f;
+	private static final float CAMERA_LERP_FACTOR = 0.1f;
+
+	private final Map<Vector2i, Texture> world = new HashMap<>();
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -28,6 +33,13 @@ public class ScreenGame extends Screen {
 	@Override
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
 		super.init(windowX, windowY, windowWidth, windowHeight);
+
+		world.put(new Vector2i(0, 0), core.getTexture("graphics_background"));
+		world.put(new Vector2i(-1, 0), core.getTexture("graphics_background"));
+		world.put(new Vector2i(0, 1), core.getTexture("graphics_background"));
+		world.put(new Vector2i(1, 1), core.getTexture("graphics_background"));
+
+		camera.setZoomLevel(0.2F);
 	}
 
 	@Override
@@ -38,15 +50,11 @@ public class ScreenGame extends Screen {
 
 		camera.apply();
 
-		for (int row = -5; row <= 5; row++) {
-			for (int col = -5; col <= 5; col++) {
-				float xPos = col * background.getWidth();
-				float yPos = row * background.getHeight();
-				background.setX(xPos);
-				background.setY(yPos);
-				background.render(delta, 0, 0, 0, 0);
-			}
-		}
+		world.forEach((point, texture) -> {
+			texture.setX(point.x * texture.getWidth());
+			texture.setY(point.y * texture.getHeight());
+			texture.render(delta, 0, 0, 0, 0);
+		});
 	}
 
 	@Override
@@ -58,6 +66,8 @@ public class ScreenGame extends Screen {
 		float newY = currentY + CAMERA_LERP_FACTOR * (targetCameraY - currentY);
 
 		camera.setPosition(new Vector3f(newX, newY, 0));
+
+		System.out.println((int) camera.getPosition().x + " x " + (int) camera.getPosition().y);
 	}
 
 	@Override
@@ -123,7 +133,7 @@ public class ScreenGame extends Screen {
 		ImGui.begin("ButtonWindow_Up", flags);
 		{
 			if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
-				targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
+				targetCameraY += core.getTexture("graphics_background", 0).getHeight();
 			}
 		}
 		ImGui.end();
@@ -143,7 +153,7 @@ public class ScreenGame extends Screen {
 		ImGui.begin("ButtonWindow_Down", flags);
 		{
 			if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
-				targetCameraY += core.getTexture("graphics_background", 0).getHeight();
+				targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
 			}
 		}
 		ImGui.end();

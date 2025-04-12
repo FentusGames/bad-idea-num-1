@@ -88,8 +88,8 @@ public class Camera {
 		float halfHeight = actualViewHeight / 2.0f;
 
 		// Create orthographic projection
-		projectionMatrix.ortho2D(-halfWidth, halfWidth, halfHeight, -halfHeight);
-
+		projectionMatrix.ortho2D(-halfWidth, halfWidth, -halfHeight, halfHeight);
+		
 		// Apply zoom (scaling)
 		projectionMatrix.scale(zoomLevel);
 

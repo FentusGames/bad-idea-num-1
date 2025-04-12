@@ -38,13 +38,16 @@ public class Texture implements Renderable, Disposable {
 		float halfH = height * 0.5f;
 
 		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0);
-		glVertex2f(-halfW, -halfH);
-		glTexCoord2f(1, 0);
-		glVertex2f(halfW, -halfH);
-		glTexCoord2f(1, 1);
-		glVertex2f(halfW, halfH);
 		glTexCoord2f(0, 1);
+		glVertex2f(-halfW, -halfH);
+
+		glTexCoord2f(1, 1);
+		glVertex2f(halfW, -halfH);
+
+		glTexCoord2f(1, 0);
+		glVertex2f(halfW, halfH);
+
+		glTexCoord2f(0, 0);
 		glVertex2f(-halfW, halfH);
 		glEnd();
 
