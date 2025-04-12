@@ -19,7 +19,7 @@ public class ScreenGame extends Screen {
 	private float targetCameraX = 0.0f;
 	private float targetCameraY = 0.0f;
 
-	private static final float CAMERA_LERP_FACTOR = 0.1f;
+	private static final float CAMERA_LERP_FACTOR = 0.05f;
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -97,14 +97,12 @@ public class ScreenGame extends Screen {
 
 			// UP
 			if (HImGui.imageButton(core, "graphics_buttons_test", "Up", true, 0)) {
-				System.out.println("UP");
-				camera.translate(0, camera.getActualViewHeight());
+				targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
 			}
 
 			// DOWN
 			if (HImGui.imageButton(core, "graphics_buttons_test", "Down", true, 180)) {
-				System.out.println("DOWN");
-				camera.translate(0, -camera.getActualViewHeight());
+				targetCameraY += core.getTexture("graphics_background", 0).getHeight();
 			}
 		}
 		ImGui.end();
@@ -130,6 +128,16 @@ public class ScreenGame extends Screen {
 		}
 		ImGui.end();
 
+		ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
+		ImGui.setNextWindowSize(imageW, imageH);
+		ImGui.begin("ButtonWindow_Right", flags);
+		{
+			if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
+				targetCameraX += core.getTexture("graphics_background", 0).getWidth();
+			}
+		}
+		ImGui.end();
+
 		ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
 		ImGui.setNextWindowSize(imageW, imageH);
 		ImGui.begin("ButtonWindow_Down", flags);
@@ -146,16 +154,6 @@ public class ScreenGame extends Screen {
 		{
 			if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
 				targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
-			}
-		}
-		ImGui.end();
-
-		ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
-		ImGui.setNextWindowSize(imageW, imageH);
-		ImGui.begin("ButtonWindow_Right", flags);
-		{
-			if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
-				targetCameraX += core.getTexture("graphics_background", 0).getWidth();
 			}
 		}
 		ImGui.end();
