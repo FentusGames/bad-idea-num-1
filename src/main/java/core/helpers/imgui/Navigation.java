@@ -42,10 +42,10 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
 		Core core = screen.getCore();
 
-		world.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), "Main Game Screen"));
-		world.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), "Bottom Right"));
-		world.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), "Top Left"));
-		world.put(new Vector2i(1, 1), new WorldTile(core.getTexture("graphics_background"), "Top Right"));
+		world.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-main")));
+		world.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-1")));
+		world.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-2")));
+		world.put(new Vector2i(1, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-3")));
 	}
 
 	@Override

@@ -14,3 +14,8 @@ gene_id: Gene ID
 encodedSymbol: Encoded Symbol
 description: Description
 diseases: Diseases
+
+tile-main: Main Game Menu 
+tile-1: Tile 1
+tile-2: Tile 2
+tile-3: Tile 3
