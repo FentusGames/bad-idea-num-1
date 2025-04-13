@@ -23,15 +23,14 @@ import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 
 public class Navigation implements Initable, Renderable, Updateable, Imguiable, KeyCallback {
+	private static final float CAMERA_LERP_FACTOR = 0.1f;
+
 	private Screen screen;
 
 	private float targetCameraX = 0.0f;
 	private float targetCameraY = 0.0f;
 
-	private static final float CAMERA_LERP_FACTOR = 0.1f;
-
 	private final Vector2i pos = new Vector2i(0, 0);
-
 	private final Map<Vector2i, WorldTile> world = new HashMap<>();
 
 	public Navigation(Screen screen) {
@@ -76,8 +75,10 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
 		Core core = screen.getCore();
 
-		float imageW = core.getScale(64);
-		float imageH = core.getScale(64);
+		Texture texture = core.getAnimation("graphics_buttons_test").getFrames().get(0);
+
+		float imageW = core.getScale(texture.getWidth());
+		float imageH = core.getScale(texture.getHeight());
 		float imageHW = imageW * 0.5f;
 		float imageHH = imageH * 0.5f;
 		float halfW = windowWidth * 0.5f;

@@ -18,6 +18,8 @@ public class ScreenGame extends Screen {
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
 		super.init(windowX, windowY, windowWidth, windowHeight);
 
+		camera.setZoomLevel(0.3F);
+		
 		navigation.init(windowX, windowY, windowWidth, windowHeight);
 	}
 
