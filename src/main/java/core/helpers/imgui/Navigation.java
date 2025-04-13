@@ -5,12 +5,14 @@ import java.util.Map;
 
 import org.joml.Vector2i;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 
 import core.Core;
 import core.camera.Camera;
 import core.helpers.HImGui;
 import core.interfaces.Imguiable;
 import core.interfaces.Initable;
+import core.interfaces.KeyCallback;
 import core.interfaces.Renderable;
 import core.interfaces.Updateable;
 import core.screens.Screen;
@@ -19,7 +21,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 
-public class Navigation implements Initable, Renderable, Updateable, Imguiable {
+public class Navigation implements Initable, Renderable, Updateable, Imguiable, KeyCallback {
 	private Screen screen;
 
 	private float targetCameraX = 0.0f;
@@ -88,8 +90,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 			ImGui.begin("ButtonWindow_Up", flags);
 			{
 				if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
-					targetCameraY += core.getTexture("graphics_background", 0).getHeight();
-					pos.y += 1;
+					up(core);
 				}
 			}
 			ImGui.end();
@@ -101,8 +102,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 			ImGui.begin("ButtonWindow_Right", flags);
 			{
 				if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
-					targetCameraX += core.getTexture("graphics_background", 0).getWidth();
-					pos.x += 1;
+					right(core);
 				}
 			}
 			ImGui.end();
@@ -114,8 +114,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 			ImGui.begin("ButtonWindow_Down", flags);
 			{
 				if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
-					targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
-					pos.y -= 1;
+					down(core);
 				}
 			}
 			ImGui.end();
@@ -127,13 +126,64 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 			ImGui.begin("ButtonWindow_Left", flags);
 			{
 				if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
-					targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
-					pos.x -= 1;
+					left(core);
 				}
 			}
 			ImGui.end();
 		}
 
 		ImGui.popStyleVar();
+	}
+
+	@Override
+	public void key(long window, int key, int scancode, int action, int mods) {
+		Core core = screen.getCore();
+
+		if (action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT) {
+			switch (key) {
+			case GLFW.GLFW_KEY_W:
+				up(core);
+				break;
+			case GLFW.GLFW_KEY_D:
+				right(core);
+				break;
+			case GLFW.GLFW_KEY_S:
+				down(core);
+				break;
+			case GLFW.GLFW_KEY_A:
+				left(core);
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	private void up(Core core) {
+		if (world.containsKey(new Vector2i(pos.x, pos.y + 1))) {
+			targetCameraY += core.getTexture("graphics_background", 0).getHeight();
+			pos.y += 1;
+		}
+	}
+
+	private void right(Core core) {
+		if (world.containsKey(new Vector2i(pos.x + 1, pos.y))) {
+			targetCameraX += core.getTexture("graphics_background", 0).getWidth();
+			pos.x += 1;
+		}
+	}
+
+	private void down(Core core) {
+		if (world.containsKey(new Vector2i(pos.x, pos.y - 1))) {
+			targetCameraY -= core.getTexture("graphics_background", 0).getHeight();
+			pos.y -= 1;
+		}
+	}
+
+	private void left(Core core) {
+		if (world.containsKey(new Vector2i(pos.x - 1, pos.y))) {
+			targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
+			pos.x -= 1;
+		}
 	}
 }

@@ -60,25 +60,6 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void key(long window, int key, int scancode, int action, int mods) {
-		final float moveSpeed = 5.0f;
-
-		if (action == org.lwjgl.glfw.GLFW.GLFW_PRESS || action == org.lwjgl.glfw.GLFW.GLFW_REPEAT) {
-			switch (key) {
-			case org.lwjgl.glfw.GLFW.GLFW_KEY_W:
-				camera.translate(0, -moveSpeed);
-				break;
-			case org.lwjgl.glfw.GLFW.GLFW_KEY_S:
-				camera.translate(0, moveSpeed);
-				break;
-			case org.lwjgl.glfw.GLFW.GLFW_KEY_A:
-				camera.translate(-moveSpeed, 0);
-				break;
-			case org.lwjgl.glfw.GLFW.GLFW_KEY_D:
-				camera.translate(moveSpeed, 0);
-				break;
-			default:
-				break;
-			}
-		}
+		navigation.key(window, key, scancode, action, mods);
 	}
 }
