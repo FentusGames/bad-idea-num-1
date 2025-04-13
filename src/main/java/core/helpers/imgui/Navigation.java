@@ -38,7 +38,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	}
 
 	@Override
-	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void init() {
 		Core core = screen.getCore();
 
 		world.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-main")));
@@ -48,18 +48,18 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	}
 
 	@Override
-	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void render(float delta) {
 		world.forEach((pos, worldTile) -> {
 			Texture texture = worldTile.getTexture();
 
 			texture.setX(pos.x * texture.getWidth());
 			texture.setY(pos.y * texture.getHeight());
-			texture.render(delta, 0, 0, 0, 0);
+			texture.render(delta);
 		});
 	}
 
 	@Override
-	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void update(float delta) {
 		Camera camera = screen.getCamera();
 
 		float currentX = camera.getPosition().x;
@@ -72,7 +72,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	}
 
 	@Override
-	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void imgui(float delta) {
 		Core core = screen.getCore();
 
 		Texture texture = core.getAnimation("graphics_buttons_test").getFrames().get(0);
@@ -81,8 +81,8 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 		float imageH = core.getScale(texture.getHeight());
 		float imageHW = imageW * 0.5f;
 		float imageHH = imageH * 0.5f;
-		float halfW = windowWidth * 0.5f;
-		float halfH = windowHeight * 0.5f;
+		float halfW = core.getWindowWidth() * 0.5f;
+		float halfH = core.getWindowHeight() * 0.5f;
 
 		int flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoBackground;
 
@@ -103,7 +103,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 
 		Vector2i rightTile = new Vector2i(pos.x + 1, pos.y);
 		if (world.containsKey(rightTile)) {
-			ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
+			ImGui.setNextWindowPos(core.getWindowWidth() - imageW - 10, halfH - imageHH);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Right", flags);
 			{
@@ -116,7 +116,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 
 		Vector2i downTile = new Vector2i(pos.x, pos.y - 1);
 		if (world.containsKey(downTile)) {
-			ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
+			ImGui.setNextWindowPos(halfW - imageHW, core.getWindowHeight() - imageH - 10);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Down", flags);
 			{

@@ -248,19 +248,19 @@ public class Core {
 			lastTime = now;
 
 			while (delta >= 1.0F) {
-				screen.update(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
+				screen.update(delta);
 				updates++;
 				delta--;
 			}
 
-			screen.render(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
+			screen.render(delta);
 
 			imGuiGlfw.newFrame();
 			ImGui.newFrame();
 
 			ImGui.pushFont(fonts.getFont("default", 14));
 
-			screen.imgui(delta, windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
+			screen.imgui(delta);
 
 			ImGui.popFont();
 
@@ -310,7 +310,7 @@ public class Core {
 
 		this.screen = screen;
 
-		screen.init(windowX[0], windowY[0], windowWidth[0], windowHeight[0]);
+		screen.init();
 
 		return screen.getCore();
 	}

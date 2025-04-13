@@ -20,33 +20,33 @@ public class ScreenMainMenu extends Screen {
 	}
 
 	@Override
-	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
-		super.init(windowX, windowY, windowWidth, windowHeight);
+	public void init() {
+		super.init();
 	}
 
 	@Override
-	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void render(float delta) {
 	}
 
 	@Override
-	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void update(float delta) {
 	}
 
 	@Override
-	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void imgui(float delta) {
 		if (core.getDebug()) {
 			ImGui.showDemoWindow();
 		}
 
 		float menuWidth = 400;
-		float centerX = (windowWidth - menuWidth) * 0.5F;
+		float centerX = (core.getWindowWidth() - menuWidth) * 0.5F;
 
 		ImGui.setNextWindowPos(centerX, 0, ImGuiCond.Appearing);
 		ImGui.setNextWindowSizeConstraints(menuWidth, -1, menuWidth, -1);
 		ImGui.begin("##MainMenu", ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoBackground);
 
 		float menuHeight = ImGui.getWindowSizeY();
-		float centerY = (windowHeight - menuHeight) * 0.5F;
+		float centerY = (core.getWindowHeight() - menuHeight) * 0.5F;
 
 		ImGui.setWindowPos(centerX, centerY);
 		ImGui.pushFont(core.getFont("default", 64));

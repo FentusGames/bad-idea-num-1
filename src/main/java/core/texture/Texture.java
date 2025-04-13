@@ -24,7 +24,7 @@ public class Texture implements Renderable, Disposable {
 	}
 
 	@Override
-	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void render(float delta) {
 		glBindTexture(GL_TEXTURE_2D, id);
 		glPushMatrix();
 

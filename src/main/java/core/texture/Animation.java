@@ -47,7 +47,7 @@ public class Animation implements Renderable, Disposable {
 	}
 
 	@Override
-	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void render(float delta) {
 		Texture frame = frames.get(currentFrame);
 		if (frame == null || frame.getID() == 0) {
 			logger.warn("Attempted to render a null or invalid frame.");

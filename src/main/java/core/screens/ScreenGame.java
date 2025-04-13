@@ -15,34 +15,34 @@ public class ScreenGame extends Screen {
 	}
 
 	@Override
-	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
-		super.init(windowX, windowY, windowWidth, windowHeight);
+	public void init() {
+		super.init();
 
 		camera.setZoomLevel(0.3F);
-		
-		navigation.init(windowX, windowY, windowWidth, windowHeight);
+
+		navigation.init();
 	}
 
 	@Override
-	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void render(float delta) {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		camera.apply();
 
-		navigation.render(delta, windowX, windowY, windowWidth, windowHeight);
+		navigation.render(delta);
 	}
 
 	@Override
-	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		navigation.update(delta, windowX, windowY, windowWidth, windowHeight);
+	public void update(float delta) {
+		navigation.update(delta);
 	}
 
 	@Override
-	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		navigation.imgui(delta, windowX, windowY, windowWidth, windowHeight);
-		demo.imgui(delta, windowX, windowY, windowWidth, windowHeight);
+	public void imgui(float delta) {
+		navigation.imgui(delta);
+		demo.imgui(delta);
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 	}
 
 	@Override
-	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void init() {
 		camera = new Camera(this.getCore().getWindowPtr());
 
 		core.setScrollCallback(this);
@@ -37,13 +37,13 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 	}
 
 	@Override
-	public abstract void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
+	public abstract void render(float delta);
 
 	@Override
-	public abstract void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
+	public abstract void update(float delta);
 
 	@Override
-	public abstract void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight);
+	public abstract void imgui(float delta);
 
 	@Override
 	public void dispose() {

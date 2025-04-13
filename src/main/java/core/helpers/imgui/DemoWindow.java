@@ -17,7 +17,7 @@ public class DemoWindow implements Imguiable {
 	}
 
 	@Override
-	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
+	public void imgui(float delta) {
 		Core core = screen.getCore();
 
 		ImGui.begin("Demo Panel");
@@ -28,7 +28,7 @@ public class DemoWindow implements Imguiable {
 				ImGui.text("Fixed font (12 @ 1366x768)");
 				ImGui.text(String.format("Font Size: %.1f", font1.getFontSize()));
 				ImGui.text(String.format("Delta Time: %.3f", delta));
-				ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+				ImGui.text(String.format("Window Size: %d x %d", core.getWindowWidth(), core.getWindowHeight()));
 			}
 			ImGui.popFont();
 
@@ -40,7 +40,7 @@ public class DemoWindow implements Imguiable {
 				ImGui.text("Scaled font based on resolution");
 				ImGui.text(String.format("Font Size: %.1f", font2.getFontSize()));
 				ImGui.text(String.format("Delta Time: %.3f", delta));
-				ImGui.text(String.format("Window Size: %d x %d", windowWidth, windowHeight));
+				ImGui.text(String.format("Window Size: %d x %d", core.getWindowWidth(), core.getWindowHeight()));
 			}
 			ImGui.popFont();
 
