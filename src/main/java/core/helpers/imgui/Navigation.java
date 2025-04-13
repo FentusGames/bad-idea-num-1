@@ -43,6 +43,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 
 			texture.setX(pos.x * texture.getWidth());
 			texture.setY(pos.y * texture.getHeight());
+			
 			texture.render(delta);
 		});
 	}
