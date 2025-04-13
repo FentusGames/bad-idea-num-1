@@ -12,7 +12,7 @@ import imgui.ImGui;
 
 public class ScreenGame extends Screen {
 	private final Camera camera = new Camera(core.getWindowPtr());
-	private Navigation navigation = new Navigation(this);
+	private final Navigation navigation = new Navigation(this);
 
 	public ScreenGame(Core core) {
 		super(core);
