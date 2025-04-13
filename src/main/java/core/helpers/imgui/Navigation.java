@@ -12,7 +12,6 @@ import core.camera.Camera;
 import core.helpers.HImGui;
 import core.helpers.WorldTile;
 import core.interfaces.Imguiable;
-import core.interfaces.Initable;
 import core.interfaces.KeyCallback;
 import core.interfaces.Renderable;
 import core.interfaces.Updateable;
@@ -22,7 +21,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 
-public class Navigation implements Initable, Renderable, Updateable, Imguiable, KeyCallback {
+public class Navigation implements Renderable, Updateable, Imguiable, KeyCallback {
 	private static final float CAMERA_LERP_FACTOR = 0.1f;
 
 	private Screen screen;
@@ -35,16 +34,6 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 
 	public Navigation(Screen screen) {
 		this.screen = screen;
-	}
-
-	@Override
-	public void init() {
-		Core core = screen.getCore();
-
-		world.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-main")));
-		world.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-1")));
-		world.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-2")));
-		world.put(new Vector2i(1, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-3")));
 	}
 
 	@Override
@@ -193,5 +182,9 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 			targetCameraX -= core.getTexture("graphics_background", 0).getWidth();
 			pos.x -= 1;
 		}
+	}
+
+	public void put(Vector2i vector2i, WorldTile worldTile) {
+		world.put(vector2i, worldTile);
 	}
 }

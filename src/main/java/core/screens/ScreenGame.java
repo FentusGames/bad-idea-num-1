@@ -1,8 +1,10 @@
 package core.screens;
 
+import org.joml.Vector2i;
 import org.lwjgl.opengl.GL11;
 
 import core.Core;
+import core.helpers.WorldTile;
 import core.helpers.imgui.DemoWindow;
 import core.helpers.imgui.Navigation;
 
@@ -20,7 +22,10 @@ public class ScreenGame extends Screen {
 
 		camera.setZoomLevel(0.3F);
 
-		navigation.init();
+		navigation.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-main")));
+		navigation.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-1")));
+		navigation.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-2")));
+		navigation.put(new Vector2i(1, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-3")));
 	}
 
 	@Override
