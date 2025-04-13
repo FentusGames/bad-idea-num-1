@@ -93,25 +93,25 @@ public class HImGui {
 		ImGui.setCursorScreenPos(x, y + height);
 	}
 
-	public static boolean imageButton(Core core, String key, String name, float width, float height) {
-		return imageButton(core, key, name, width, height, 0, false, false);
+	public static boolean imageButton(Core core, String key, String name, float width, float height, String tooltip) {
+		return imageButton(core, key, name, width, height, 0, false, false, tooltip);
 	}
 
-	public static boolean imageButton(Core core, String key, String name, Boolean scale) {
-		return imageButton(core, key, name, scale, 0);
+	public static boolean imageButton(Core core, String key, String name, Boolean scale, String tooltip) {
+		return imageButton(core, key, name, scale, 0, tooltip);
 	}
 
-	public static boolean imageButton(Core core, String key, String name, Boolean scale, int rotationDegrees) {
+	public static boolean imageButton(Core core, String key, String name, Boolean scale, int rotationDegrees, String tooltip) {
 		Texture texture = core.getAnimation(key).getFrames().get(0);
 
 		if (scale) {
-			return imageButton(core, key, name, core.getScale(texture.getWidth()), core.getScale(texture.getHeight()), rotationDegrees, false, false);
+			return imageButton(core, key, name, core.getScale(texture.getWidth()), core.getScale(texture.getHeight()), rotationDegrees, false, false, tooltip);
 		} else {
-			return imageButton(core, key, name, texture.getWidth(), texture.getHeight(), rotationDegrees, false, false);
+			return imageButton(core, key, name, texture.getWidth(), texture.getHeight(), rotationDegrees, false, false, tooltip);
 		}
 	}
 
-	public static boolean imageButton(Core core, String key, String name, float width, float height, int rotationDegrees, boolean flipX, boolean flipY) {
+	public static boolean imageButton(Core core, String key, String name, float width, float height, int rotationDegrees, boolean flipX, boolean flipY, String tooltip) {
 		if (core.getAnimation(key).getFrames().size() < 3) {
 			throw new IllegalArgumentException("Animation must have >= 3 frames: 0=active,1=hover,2=idle");
 		}
@@ -139,6 +139,12 @@ public class HImGui {
 
 		imageRotated(textureId, width, height, rotationDegrees, flipX, flipY);
 
+		if (isHovered) {
+	        ImGui.beginTooltip();
+	        ImGui.text(tooltip);
+	        ImGui.endTooltip();
+	    }
+		
 		ImGui.setCursorPos(startPos.x, startPos.y + height);
 
 		ImGui.popID();

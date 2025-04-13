@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import core.Core;
 import core.camera.Camera;
 import core.helpers.HImGui;
+import core.helpers.WorldTile;
 import core.interfaces.Imguiable;
 import core.interfaces.Initable;
 import core.interfaces.KeyCallback;
@@ -31,7 +32,7 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 
 	private final Vector2i pos = new Vector2i(0, 0);
 
-	private final Map<Vector2i, Texture> world = new HashMap<>();
+	private final Map<Vector2i, WorldTile> world = new HashMap<>();
 
 	public Navigation(Screen screen) {
 		this.screen = screen;
@@ -41,17 +42,19 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
 		Core core = screen.getCore();
 
-		world.put(new Vector2i(0, 0), core.getTexture("graphics_background"));
-		world.put(new Vector2i(-1, 0), core.getTexture("graphics_background"));
-		world.put(new Vector2i(0, 1), core.getTexture("graphics_background"));
-		world.put(new Vector2i(1, 1), core.getTexture("graphics_background"));
+		world.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), "Main Game Screen"));
+		world.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), "Bottom Right"));
+		world.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), "Top Left"));
+		world.put(new Vector2i(1, 1), new WorldTile(core.getTexture("graphics_background"), "Top Right"));
 	}
 
 	@Override
 	public void render(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		world.forEach((point, texture) -> {
-			texture.setX(point.x * texture.getWidth());
-			texture.setY(point.y * texture.getHeight());
+		world.forEach((pos, worldTile) -> {
+			Texture texture = worldTile.getTexture();
+
+			texture.setX(pos.x * texture.getWidth());
+			texture.setY(pos.y * texture.getHeight());
 			texture.render(delta, 0, 0, 0, 0);
 		});
 	}
@@ -84,48 +87,52 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable, 
 
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 
-		if (world.containsKey(new Vector2i(pos.x, pos.y + 1))) {
+		Vector2i upTile = new Vector2i(pos.x, pos.y + 1);
+		if (world.containsKey(upTile)) {
 			ImGui.setNextWindowPos(halfW - imageHW, 10);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Up", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0)) {
+				if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0, world.get(upTile).getName())) {
 					up(core);
 				}
 			}
 			ImGui.end();
 		}
 
-		if (world.containsKey(new Vector2i(pos.x + 1, pos.y))) {
+		Vector2i rightTile = new Vector2i(pos.x + 1, pos.y);
+		if (world.containsKey(rightTile)) {
 			ImGui.setNextWindowPos(windowWidth - imageW - 10, halfH - imageHH);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Right", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90)) {
+				if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90, world.get(rightTile).getName())) {
 					right(core);
 				}
 			}
 			ImGui.end();
 		}
 
-		if (world.containsKey(new Vector2i(pos.x, pos.y - 1))) {
+		Vector2i downTile = new Vector2i(pos.x, pos.y - 1);
+		if (world.containsKey(downTile)) {
 			ImGui.setNextWindowPos(halfW - imageHW, windowHeight - imageH - 10);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Down", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180)) {
+				if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180, world.get(downTile).getName())) {
 					down(core);
 				}
 			}
 			ImGui.end();
 		}
 
-		if (world.containsKey(new Vector2i(pos.x - 1, pos.y))) {
+		Vector2i leftTile = new Vector2i(pos.x - 1, pos.y);
+		if (world.containsKey(leftTile)) {
 			ImGui.setNextWindowPos(10, halfH - imageHH);
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Left", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270)) {
+				if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270, world.get(leftTile).getName())) {
 					left(core);
 				}
 			}
