@@ -9,8 +9,8 @@ import core.helpers.imgui.DemoWindow;
 import core.helpers.imgui.Navigation;
 
 public class ScreenGame extends Screen {
-	private final Navigation navigation = new Navigation(this);
 	private final DemoWindow demo = new DemoWindow(this);
+	private final Navigation navigation = new Navigation(this);
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -46,8 +46,8 @@ public class ScreenGame extends Screen {
 
 	@Override
 	public void imgui(float delta) {
-		navigation.imgui(delta);
 		demo.imgui(delta);
+		navigation.imgui(delta);
 	}
 
 	@Override
