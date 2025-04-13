@@ -1,6 +1,7 @@
 package core.screens;
 
 import core.Core;
+import core.camera.Camera;
 import core.interfaces.Disposable;
 import core.interfaces.Imguiable;
 import core.interfaces.Initable;
@@ -12,6 +13,7 @@ import core.interfaces.Updateable;
 
 public abstract class Screen implements Initable, Renderable, Updateable, Imguiable, Disposable, ScrollCallback, MouseButtonCallback, KeyCallback {
 	protected Core core;
+	protected Camera camera;
 
 	public Screen(Core core) {
 		this.core = core;
@@ -27,6 +29,8 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 
 	@Override
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
+		camera = new Camera(this.getCore().getWindowPtr());
+
 		core.setScrollCallback(this);
 		core.setMouseButtonCallback(this);
 		core.setKeyCallback(this);
@@ -46,5 +50,9 @@ public abstract class Screen implements Initable, Renderable, Updateable, Imguia
 		core.setScrollCallback(this);
 		core.setMouseButtonCallback(this);
 		core.setKeyCallback(this);
+	}
+
+	public Camera getCamera() {
+		return camera;
 	}
 }

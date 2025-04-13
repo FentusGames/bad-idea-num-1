@@ -7,19 +7,20 @@ import org.joml.Vector2i;
 import org.joml.Vector3f;
 
 import core.Core;
+import core.camera.Camera;
 import core.helpers.HImGui;
 import core.interfaces.Imguiable;
 import core.interfaces.Initable;
 import core.interfaces.Renderable;
 import core.interfaces.Updateable;
-import core.screens.ScreenGame;
+import core.screens.Screen;
 import core.texture.Texture;
 import imgui.ImGui;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 
 public class Navigation implements Initable, Renderable, Updateable, Imguiable {
-	private ScreenGame screenGame;
+	private Screen screen;
 
 	private float targetCameraX = 0.0f;
 	private float targetCameraY = 0.0f;
@@ -30,13 +31,13 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 
 	private final Map<Vector2i, Texture> world = new HashMap<>();
 
-	public Navigation(ScreenGame screenGame) {
-		this.screenGame = screenGame;
+	public Navigation(Screen screen) {
+		this.screen = screen;
 	}
 
 	@Override
 	public void init(int windowX, int windowY, int windowWidth, int windowHeight) {
-		Core core = screenGame.getCore();
+		Core core = screen.getCore();
 
 		world.put(new Vector2i(0, 0), core.getTexture("graphics_background"));
 		world.put(new Vector2i(-1, 0), core.getTexture("graphics_background"));
@@ -55,18 +56,20 @@ public class Navigation implements Initable, Renderable, Updateable, Imguiable {
 
 	@Override
 	public void update(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		float currentX = screenGame.getCamera().getPosition().x;
-		float currentY = screenGame.getCamera().getPosition().y;
+		Camera camera = screen.getCamera();
+
+		float currentX = camera.getPosition().x;
+		float currentY = camera.getPosition().y;
 
 		float newX = currentX + CAMERA_LERP_FACTOR * (targetCameraX - currentX);
 		float newY = currentY + CAMERA_LERP_FACTOR * (targetCameraY - currentY);
 
-		screenGame.getCamera().setPosition(new Vector3f(newX, newY, 0));
+		camera.setPosition(new Vector3f(newX, newY, 0));
 	}
 
 	@Override
 	public void imgui(float delta, int windowX, int windowY, int windowWidth, int windowHeight) {
-		Core core = screenGame.getCore();
+		Core core = screen.getCore();
 
 		float imageW = core.getScale(64);
 		float imageH = core.getScale(64);
