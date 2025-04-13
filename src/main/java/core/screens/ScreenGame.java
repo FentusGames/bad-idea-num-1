@@ -68,8 +68,6 @@ public class ScreenGame extends Screen {
 		float newY = currentY + CAMERA_LERP_FACTOR * (targetCameraY - currentY);
 
 		camera.setPosition(new Vector3f(newX, newY, 0));
-
-		System.out.println((int) camera.getPosition().x + " x " + (int) camera.getPosition().y);
 	}
 
 	@Override
