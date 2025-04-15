@@ -139,7 +139,7 @@ public class HImGui {
 
 		imageRotated(textureId, width, height, rotationDegrees, flipX, flipY);
 
-		if (isHovered) {
+		if (isHovered && !tooltip.isEmpty()) {
 	        ImGui.beginTooltip();
 	        ImGui.text(tooltip);
 	        ImGui.endTooltip();

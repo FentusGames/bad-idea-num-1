@@ -50,8 +50,6 @@ public class DemoWindow implements Imguiable {
 			HImGui.imageRotated(texture.getID(), core.getScale(256), core.getScale(108));
 
 			ImGui.newLine();
-
-			core.getTexture("graphics_buttons_test", 0);
 		}
 		ImGui.end();
 	}

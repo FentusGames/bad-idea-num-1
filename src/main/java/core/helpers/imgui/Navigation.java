@@ -65,7 +65,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 	public void imgui(float delta) {
 		Core core = screen.getCore();
 
-		Texture texture = core.getAnimation("graphics_buttons_test").getFrames().get(0);
+		Texture texture = core.getAnimation("graphics_buttons_nav").getFrames().get(0);
 
 		float imageW = core.getScale(texture.getWidth());
 		float imageH = core.getScale(texture.getHeight());
@@ -84,7 +84,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Up", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "UpOverlay", true, 0, world.get(upTile).getName())) {
+				if (HImGui.imageButton(core, "graphics_buttons_nav", "UpOverlay", true, 0, world.get(upTile).getName())) {
 					up(core);
 				}
 			}
@@ -97,7 +97,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Right", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "RightOverlay", true, 90, world.get(rightTile).getName())) {
+				if (HImGui.imageButton(core, "graphics_buttons_nav", "RightOverlay", true, 90, world.get(rightTile).getName())) {
 					right(core);
 				}
 			}
@@ -110,7 +110,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Down", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "DownOverlay", true, 180, world.get(downTile).getName())) {
+				if (HImGui.imageButton(core, "graphics_buttons_nav", "DownOverlay", true, 180, world.get(downTile).getName())) {
 					down(core);
 				}
 			}
@@ -123,7 +123,7 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 			ImGui.setNextWindowSize(imageW, imageH);
 			ImGui.begin("ButtonWindow_Left", flags);
 			{
-				if (HImGui.imageButton(core, "graphics_buttons_test", "LeftOverlay", true, 270, world.get(leftTile).getName())) {
+				if (HImGui.imageButton(core, "graphics_buttons_nav", "LeftOverlay", true, 270, world.get(leftTile).getName())) {
 					left(core);
 				}
 			}

@@ -7,10 +7,12 @@ import core.Core;
 import core.helpers.WorldTile;
 import core.helpers.imgui.DemoWindow;
 import core.helpers.imgui.Navigation;
+import core.helpers.imgui.NextDay;
 
 public class ScreenGame extends Screen {
 	private final DemoWindow demo = new DemoWindow(this);
 	private final Navigation navigation = new Navigation(this);
+	private final NextDay nextday = new NextDay(this);
 
 	public ScreenGame(Core core) {
 		super(core);
@@ -48,6 +50,7 @@ public class ScreenGame extends Screen {
 	public void imgui(float delta) {
 		demo.imgui(delta);
 		navigation.imgui(delta);
+		nextday.imgui(delta);
 	}
 
 	@Override
