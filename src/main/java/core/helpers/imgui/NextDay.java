@@ -11,7 +11,7 @@ import imgui.flag.ImGuiWindowFlags;
 public class NextDay implements Imguiable {
 	private ScreenGame screenGame;
 
-	private int currentDay = 999;
+	private int currentDay = 0;
 	private boolean nextDayEnabled = true;
 
 	public NextDay(ScreenGame screenGame) {
