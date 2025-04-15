@@ -22,8 +22,6 @@ public class ScreenGame extends Screen {
 	public void init() {
 		super.init();
 
-		camera.setZoomLevel(0.3F);
-
 		navigation.put(new Vector2i(0, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-main")));
 		navigation.put(new Vector2i(1, 0), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-1")));
 		navigation.put(new Vector2i(0, 1), new WorldTile(core.getTexture("graphics_background"), core.getLang("tile-2")));
