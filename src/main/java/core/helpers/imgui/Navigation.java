@@ -188,4 +188,8 @@ public class Navigation implements Renderable, Updateable, Imguiable, KeyCallbac
 	public void put(Vector2i vector2i, WorldTile worldTile) {
 		world.put(vector2i, worldTile);
 	}
+	
+	public Vector2i getPos() {
+		return pos;
+	}
 }

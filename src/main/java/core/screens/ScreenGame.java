@@ -69,4 +69,8 @@ public class ScreenGame extends Screen {
 	public void key(long window, int key, int scancode, int action, int mods) {
 		navigation.key(window, key, scancode, action, mods);
 	}
+
+	public Navigation getNavigation() {
+		return navigation;
+	}
 }
