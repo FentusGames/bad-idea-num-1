@@ -57,6 +57,12 @@ public class Fonts {
 	}
 
 	public ImFont getFont(String name, int size) {
+		if (size < MIN) {
+			size = MIN;
+		}
+		if (size > MAX) {
+			size = MAX;
+		}
 		return fonts.get("fonts_" + name + "_" + size);
 	}
 }
